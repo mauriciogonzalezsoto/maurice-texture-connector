@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: texture_connector_ui.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-09-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -43,6 +43,10 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
     CONFIG_PATH = os.path.join(maurice_utils.get_data_folder_path(), f'{WINDOW_NAME}.ini')
 
+    ARNOLD = 'Arnold'
+    REDSHIFT = 'Redshift'
+    V_RAY = 'V-Ray'
+
     IMAGE_EXTENSIONS_SUPPORTED = ['exr', 'gif', 'hdr', 'jpg', 'jpeg', 'png', 'tif', 'tiff']
 
     PUSH_BUTTON_SIZE = maurice_qt.widgets_attributes.height * 1.5
@@ -67,6 +71,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.show_metalness_images_action = None
         self.show_normal_images_action = None
         self.show_height_images_action = None
+        self.show_emissive_images_action = None
         self.show_opacity_images_action = None
         self.create_material_network_action = None
         self.repath_files_action = None
@@ -90,11 +95,12 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.metalness_check_box = None
         self.normal_check_box = None
         self.height_check_box = None
+        self.emissive_check_box = None
         self.opacity_check_box = None
         self.triplanar_frame_layout = None
         self.use_triplanar_check_box = None
         self.settings_frame_layout = None
-        self.use_texture_base_name_check_box = None
+        self.use_texture_name_check_box = None
         self.case_sensitivity_check_box = None
         
         # Explorer class variables.
@@ -108,12 +114,14 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.show_metalness_items = False
         self.show_normal_items = False
         self.show_height_items = False
+        self.show_emissive_items = False
         self.show_opacity_items = False
         self.base_color_suffix = None
         self.roughness_suffix = None
         self.metalness_suffix = None
         self.normal_suffix = None
         self.height_suffix = None
+        self.emissive_suffix = None
         self.opacity_suffix = None
 
         # Files class variables.
@@ -129,6 +137,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.metalness_widget = None
         self.normal_widget = None
         self.height_widget = None
+        self.emissive_widget = None
         self.opacity_widget = None
         self.base_color_file_texture_name = ''
         self.base_color_color_space = ''
@@ -140,6 +149,8 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.normal_color_space = ''
         self.height_file_texture_name = ''
         self.height_color_space = ''
+        self.emissive_file_texture_name = ''
+        self.emissive_color_space = ''
         self.opacity_file_texture_name = ''
         self.opacity_color_space = ''
 
@@ -196,6 +207,10 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         # Show height images QAction.
         self.show_height_images_action = maurice_qt.QAction('Height')
         self.show_height_images_action.setIcon(QtGui.QIcon(self.icons['square-h.png']))
+
+        # Show emissive images QAction.
+        self.show_emissive_images_action = maurice_qt.QAction('Emissive')
+        self.show_emissive_images_action.setIcon(QtGui.QIcon(self.icons['square-o.png']))
 
         # Show opacity images QAction.
         self.show_opacity_images_action = maurice_qt.QAction('Opacity')
@@ -290,14 +305,17 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         # Height QCheckBox.
         self.height_check_box = maurice_qt.QCheckBox('Height')
 
+        # Emissive QCheckBox.
+        self.emissive_check_box = maurice_qt.QCheckBox('Emissive')
+
         # Opacity QCheckBox.
         self.opacity_check_box = maurice_qt.QCheckBox('Opacity')
 
         # Use triplanar QCheckBox.
         self.use_triplanar_check_box = maurice_qt.QCheckBox('Use Triplanar')
 
-        # Use texture base name QCheckBox.
-        self.use_texture_base_name_check_box = maurice_qt.QCheckBox('Use Texture Base Name')
+        # Use texture base QCheckBox.
+        self.use_texture_name_check_box = maurice_qt.QCheckBox('Use Texture Name')
         
         # Case sensitivity QCheckBox.
         self.case_sensitivity_check_box = maurice_qt.QCheckBox('Case Sensitivity')
@@ -341,6 +359,11 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.height_widget = TextureSettingsWidget()
         self.height_widget.set_title('Height')
         self.height_widget.setVisible(False)
+
+        # Emissive widget.
+        self.emissive_widget = TextureSettingsWidget()
+        self.emissive_widget.set_title('Emissive')
+        self.emissive_widget.setVisible(False)
 
         # Opacity widget.
         self.opacity_widget = TextureSettingsWidget()
@@ -482,7 +505,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
         # Material QFrameLayout.
         self.material_frame_layout = maurice_qt.QFrameLayout(title='Material', parent=self.settings_widget)
-        self.material_frame_layout.set_height(maurice_utils.get_value_by_ppi(94, 144))
+        self.material_frame_layout.set_height(maurice_utils.get_value_by_ppi(109, 167))
         settings_v_box_layout.addWidget(self.material_frame_layout)
 
         # Material QGroupBox.
@@ -496,6 +519,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         material_form_layout.addWidget(self.metalness_check_box)
         material_form_layout.addWidget(self.normal_check_box)
         material_form_layout.addWidget(self.height_check_box)
+        material_form_layout.addWidget(self.emissive_check_box)
         material_form_layout.addWidget(self.opacity_check_box)
         material_form_layout.setContentsMargins(maurice_utils.get_value_by_ppi(88, 112), 0, 0, 0)
         material_group_box.setLayout(material_form_layout)
@@ -528,7 +552,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
         # Settings QFormLayout.
         settings_form_layout = maurice_qt.QFormLayout()
-        settings_form_layout.addWidget(self.use_texture_base_name_check_box)
+        settings_form_layout.addWidget(self.use_texture_name_check_box)
         settings_form_layout.setContentsMargins(maurice_utils.get_value_by_ppi(88, 112), 0, 0, 0)
         settings_group_box.setLayout(settings_form_layout)
 
@@ -632,6 +656,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         texture_connector_items_v_box_layout.addWidget(self.metalness_widget)
         texture_connector_items_v_box_layout.addWidget(self.normal_widget)
         texture_connector_items_v_box_layout.addWidget(self.height_widget)
+        texture_connector_items_v_box_layout.addWidget(self.emissive_widget)
         texture_connector_items_v_box_layout.addWidget(self.opacity_widget)
         texture_connector_items_v_box_layout.setAlignment(QtCore.Qt.AlignTop)
         self.texture_connector_widget.setLayout(texture_connector_items_v_box_layout)
@@ -668,6 +693,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.show_metalness_images_action.triggered.connect(self.show_metalness_images_triggered_action)
         self.show_normal_images_action.triggered.connect(self.show_normal_images_triggered_action)
         self.show_height_images_action.triggered.connect(self.show_height_images_triggered_action)
+        self.show_emissive_images_action.triggered.connect(self.show_emissive_images_triggered_action)
         self.show_opacity_images_action.triggered.connect(self.show_opacity_images_triggered_action)
         self.create_material_network_action.triggered.connect(self.create_material_network_triggered_action)
         self.repath_files_action.triggered.connect(self.repath_files_clicked_push_button)
@@ -690,6 +716,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.metalness_check_box.toggled.connect(self.metalness_toggled_check_box)
         self.normal_check_box.toggled.connect(self.normal_toggled_check_box)
         self.height_check_box.toggled.connect(self.height_toggled_check_box)
+        self.emissive_check_box.toggled.connect(self.emissive_toggled_check_box)
         self.opacity_check_box.toggled.connect(self.opacity_toggled_check_box)
         self.create_material_network_push_button.clicked.connect(self.create_material_network_clicked_push_button)
 
@@ -720,37 +747,27 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.metalness_widget.edit_texture_clicked.connect(self.metalness_edit_texture_clicked_widget)
         self.normal_widget.edit_texture_clicked.connect(self.normal_edit_texture_clicked_widget)
         self.height_widget.edit_texture_clicked.connect(self.height_edit_texture_clicked_widget)
+        self.emissive_widget.edit_texture_clicked.connect(self.emissive_edit_texture_clicked_widget)
         self.opacity_widget.edit_texture_clicked.connect(self.opacity_edit_texture_clicked_widget)
 
     def save_settings(self) -> None:
         """Saves the settings."""
-        renderer_engines_names = {
-            'Arnold': 'arnold',
-            'Redshift': 'redshift',
-            'V-Ray': 'vRay'}
-
         current_preset = self.presets_combo_box.currentText()
-        render_engine = self.render_engine_combo_box.currentText()
-        renderer_prefix = renderer_engines_names.get(render_engine)
-
         s = QtCore.QSettings(self.CONFIG_PATH, QtCore.QSettings.IniFormat)
 
         # ==============================================================================================================
         # Settings.
         # ==============================================================================================================
-        s.beginGroup('settings')
-        s.setValue('renderEngine', self.render_engine_combo_box.currentText())
-        s.endGroup()
-
-        s.beginGroup(f'{renderer_prefix}Settings')
-        s.setValue(f'{renderer_prefix}BaseColor', self.base_color_check_box.isChecked())
-        s.setValue(f'{renderer_prefix}Roughness', self.roughness_check_box.isChecked())
-        s.setValue(f'{renderer_prefix}Metalness', self.metalness_check_box.isChecked())
-        s.setValue(f'{renderer_prefix}Normal', self.normal_check_box.isChecked())
-        s.setValue(f'{renderer_prefix}Height', self.height_check_box.isChecked())
-        s.setValue(f'{renderer_prefix}Opacity', self.opacity_check_box.isChecked())
-        s.setValue(f'{renderer_prefix}UseTriplanar', self.use_triplanar_check_box.isChecked())
-        s.setValue(f'{renderer_prefix}UseTextureBaseName', self.use_texture_base_name_check_box.isChecked())
+        s.beginGroup(f'settings')
+        s.setValue('baseColor', self.base_color_check_box.isChecked())
+        s.setValue('roughness', self.roughness_check_box.isChecked())
+        s.setValue('metalness', self.metalness_check_box.isChecked())
+        s.setValue('normal', self.normal_check_box.isChecked())
+        s.setValue('height', self.height_check_box.isChecked())
+        s.setValue('emissive', self.emissive_check_box.isChecked())
+        s.setValue('opacity', self.opacity_check_box.isChecked())
+        s.setValue('useTriplanar', self.use_triplanar_check_box.isChecked())
+        s.setValue('useTextureName', self.use_texture_name_check_box.isChecked())
         s.endGroup()
 
         # ==============================================================================================================
@@ -767,6 +784,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         s.setValue('metalnessSuffix', self.metalness_widget.get_texture_suffix())
         s.setValue('normalSuffix', self.normal_widget.get_texture_suffix())
         s.setValue('heightSuffix', self.height_widget.get_texture_suffix())
+        s.setValue('emissiveSuffix', self.emissive_widget.get_texture_suffix())
         s.setValue('opacitySuffix', self.opacity_widget.get_texture_suffix())
         s.endGroup()
 
@@ -780,9 +798,10 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.metalness_check_box.setChecked(True)
         self.normal_check_box.setChecked(True)
         self.height_check_box.setChecked(True)
+        self.emissive_check_box.setChecked(True)
         self.opacity_check_box.setChecked(True)
         self.use_triplanar_check_box.setChecked(False)
-        self.use_texture_base_name_check_box.setChecked(True)
+        self.use_texture_name_check_box.setChecked(True)
 
         # ==============================================================================================================
         # Texture connector.
@@ -792,6 +811,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.metalness_widget.set_texture_suffix('Metallic')
         self.normal_widget.set_texture_suffix('Normal')
         self.height_widget.set_texture_suffix('Height')
+        self.emissive_widget.set_texture_suffix('Emissive')
         self.opacity_widget.set_texture_suffix('Opacity')
 
     def show_about(self) -> None:
@@ -814,6 +834,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.metalness_widget.collapse()
         self.normal_widget.collapse()
         self.height_widget.collapse()
+        self.emissive_widget.collapse()
         self.opacity_widget.collapse()
 
     def expand_frame_layouts(self) -> None:
@@ -827,6 +848,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.metalness_widget.expand()
         self.normal_widget.expand()
         self.height_widget.expand()
+        self.emissive_widget.expand()
         self.opacity_widget.expand()
 
     def load_settings(self) -> None:
@@ -836,7 +858,17 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         # ==============================================================================================================
         # Settings.
         # ==============================================================================================================
-        self.load_current_settings()
+        s.beginGroup('settings')
+        self.base_color_check_box.setChecked(s.value('baseColor', 'True', str).lower() == 'true')
+        self.roughness_check_box.setChecked(s.value('roughness', 'True', str).lower() == 'true')
+        self.metalness_check_box.setChecked(s.value('metalness', 'True', str).lower() == 'true')
+        self.normal_check_box.setChecked(s.value('normal', 'True', str).lower() == 'true')
+        self.height_check_box.setChecked(s.value('height', 'True', str).lower() == 'true')
+        self.emissive_check_box.setChecked(s.value('emissive', 'True', str).lower() == 'true')
+        self.opacity_check_box.setChecked(s.value('opacity', 'True', str).lower() == 'true')
+        self.use_triplanar_check_box.setChecked(s.value('useTriplanar', 'False', str).lower() == 'true')
+        self.use_texture_name_check_box.setChecked(s.value('useTextureName', 'True', str).lower() == 'true')
+        s.endGroup()
 
         # ==============================================================================================================
         # Texture connector.
@@ -856,6 +888,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.metalness_widget.set_texture_suffix(s.value('metalnessSuffix', 'Metallic', str))
         self.normal_widget.set_texture_suffix(s.value('normalSuffix', 'Normal', str))
         self.height_widget.set_texture_suffix(s.value('heightSuffix', 'Height', str))
+        self.emissive_widget.set_texture_suffix(s.value('emissiveSuffix', 'Emissive', str))
         self.opacity_widget.set_texture_suffix(s.value('opacitySuffix', 'Opacity', str))
         s.endGroup()
 
@@ -973,6 +1006,17 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
         self.update_images_items()
 
+    def show_emissive_images_triggered_action(self) -> None:
+        """Executes the signal 'triggered' of the 'show emissive images' action."""
+        self.disable_filter_explorer_filters()
+        self.reset_file_explorer_actions_icons()
+
+        self.show_emissive_images_action.setIcon(QtGui.QIcon(self.icons['square-o-yellow.png']))
+        self.emissive_suffix = self.emissive_widget.get_texture_suffix()
+        self.show_emissive_items = True
+
+        self.update_images_items()
+
     def show_opacity_images_triggered_action(self) -> None:
         """Executes the signal 'triggered' of the 'show opacity images' action."""
         self.disable_filter_explorer_filters()
@@ -990,11 +1034,11 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         item_data = item.data(0, QtCore.Qt.UserRole)
         render_engine = self.render_engine_combo_box.currentText()
 
-        if render_engine == 'Arnold':
+        if render_engine == TextureConnectorUI.ARNOLD:
             self.create_material_network_arnold(image_path=item_data)
-        elif render_engine == 'Redshift':
+        elif render_engine == TextureConnectorUI.REDSHIFT:
             self.create_material_network_redshift(image_path=item_data)
-        elif render_engine == 'V-Ray':
+        elif render_engine == TextureConnectorUI.V_RAY:
             self.create_material_network_v_ray(image_path=item_data)
 
     def reveal_in_explorer_triggered_action(self) -> None:
@@ -1009,10 +1053,10 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         if file_info.isDir():
             QtGui.QDesktopServices.openUrl(file_path)
         else:
-            if cmds.about(windows=True):
+            if os.name == 'nt':
                 if self.open_in_explorer(file_path):
                     return
-            elif cmds.about(macOS=True):
+            elif os.name == 'posix':
                 if self.open_in_finder(file_path):
                     return
 
@@ -1045,9 +1089,9 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
     def render_engine_current_text_changed_combo_box(self, text: str) -> None:
         """Executes the signal 'current text changed' of the 'render engine' combo box."""
         renderer_engines_names = {
-            'Arnold': 'arnold',
-            'Redshift': 'redshift',
-            'V-Ray': 'vray'}
+            TextureConnectorUI.ARNOLD: 'arnold',
+            TextureConnectorUI.REDSHIFT: 'redshift',
+            TextureConnectorUI.V_RAY: 'vray'}
 
         maya_current_render_engine = cmds.getAttr('defaultRenderGlobals.currentRenderer')
 
@@ -1055,7 +1099,6 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
             om.MGlobal.displayWarning(f'[{maurice.TEXTURE_CONNECTOR}] The current engine is not {text}.')
 
         self.clear_textures_info()
-        self.load_current_settings()
         self.set_window_title()
         self.update_materials_items()
 
@@ -1079,6 +1122,10 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         """Executes the signal 'toggled' of the 'height' check box."""
         self.height_widget.setVisible(checked)
 
+    def emissive_toggled_check_box(self, checked: bool) -> None:
+        """Executes the signal 'toggled' of the 'emissive' check box."""
+        self.emissive_widget.setVisible(checked)
+
     def opacity_toggled_check_box(self, checked: bool) -> None:
         """Executes the signal 'toggled' of the 'opacity' check box."""
         self.opacity_widget.setVisible(checked)
@@ -1087,11 +1134,11 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         """Executes the signal 'clicked' of the 'create material network' push button."""
         render_engine = self.render_engine_combo_box.currentText()
 
-        if render_engine == 'Arnold':
+        if render_engine == TextureConnectorUI.ARNOLD:
             self.create_material_network_arnold()
-        elif render_engine == 'Redshift':
+        elif render_engine == TextureConnectorUI.REDSHIFT:
             self.create_material_network_redshift()
-        elif render_engine == 'V-Ray':
+        elif render_engine == TextureConnectorUI.V_RAY:
             self.create_material_network_v_ray()
 
     def materials_filter_text_changed_line_edit(self) -> None:
@@ -1131,6 +1178,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
                 context_menu.addAction(self.show_metalness_images_action)
                 context_menu.addAction(self.show_normal_images_action)
                 context_menu.addAction(self.show_height_images_action)
+                context_menu.addAction(self.show_emissive_images_action)
                 context_menu.addAction(self.show_opacity_images_action)
 
                 if file_info.isFile():
@@ -1238,11 +1286,11 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         image_path = self.get_open_file_name()
 
         if image_path:
-            if render_engine == 'Arnold':
+            if render_engine == TextureConnectorUI.ARNOLD:
                 self.edit_material_network_arnold.edit_base_color_file_texture_node(image_path)
-            elif render_engine == 'Redshift':
+            elif render_engine == TextureConnectorUI.REDSHIFT:
                 self.edit_material_network_redshift.edit_base_color_file_texture_node(image_path)
-            elif render_engine == 'V-Ray':
+            elif render_engine == TextureConnectorUI.V_RAY:
                 self.edit_material_network_v_ray.edit_base_color_file_texture_node(image_path)
 
             self.base_color_widget.set_texture_path(image_path)
@@ -1253,11 +1301,11 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         image_path = self.get_open_file_name()
 
         if image_path:
-            if render_engine == 'Arnold':
+            if render_engine == TextureConnectorUI.ARNOLD:
                 self.edit_material_network_arnold.edit_roughness_file_texture_node(image_path)
-            elif render_engine == 'Redshift':
+            elif render_engine == TextureConnectorUI.REDSHIFT:
                 self.edit_material_network_redshift.edit_roughness_file_texture_node(image_path)
-            elif render_engine == 'V-Ray':
+            elif render_engine == TextureConnectorUI.V_RAY:
                 self.edit_material_network_v_ray.edit_roughness_file_texture_node(image_path)
 
             self.roughness_widget.set_texture_path(image_path)
@@ -1268,11 +1316,11 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         image_path = self.get_open_file_name()
 
         if image_path:
-            if render_engine == 'Arnold':
+            if render_engine == TextureConnectorUI.ARNOLD:
                 self.edit_material_network_arnold.edit_metalness_file_texture_node(image_path)
-            elif render_engine == 'Redshift':
+            elif render_engine == TextureConnectorUI.REDSHIFT:
                 self.edit_material_network_redshift.edit_metalness_file_texture_node(image_path)
-            elif render_engine == 'V-Ray':
+            elif render_engine == TextureConnectorUI.V_RAY:
                 self.edit_material_network_v_ray.edit_metalness_file_texture_node(image_path)
 
             self.metalness_widget.set_texture_path(image_path)
@@ -1283,11 +1331,11 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         image_path = self.get_open_file_name()
 
         if image_path:
-            if render_engine == 'Arnold':
+            if render_engine == TextureConnectorUI.ARNOLD:
                 self.edit_material_network_arnold.edit_normal_file_texture_node(image_path)
-            elif render_engine == 'Redshift':
+            elif render_engine == TextureConnectorUI.REDSHIFT:
                 self.edit_material_network_redshift.edit_normal_file_texture_node(image_path)
-            elif render_engine == 'V-Ray':
+            elif render_engine == TextureConnectorUI.V_RAY:
                 self.edit_material_network_v_ray.edit_normal_file_texture_node(image_path)
 
             self.normal_widget.set_texture_path(image_path)
@@ -1298,14 +1346,29 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         image_path = self.get_open_file_name()
 
         if image_path:
-            if render_engine == 'Arnold':
+            if render_engine == TextureConnectorUI.ARNOLD:
                 self.edit_material_network_arnold.edit_height_file_texture_node(image_path)
-            elif render_engine == 'Redshift':
+            elif render_engine == TextureConnectorUI.REDSHIFT:
                 self.edit_material_network_redshift.edit_height_file_texture_node(image_path)
-            elif render_engine == 'V-Ray':
+            elif render_engine == TextureConnectorUI.V_RAY:
                 self.edit_material_network_v_ray.edit_height_file_texture_node(image_path)
 
             self.height_widget.set_texture_path(image_path)
+
+    def emissive_edit_texture_clicked_widget(self) -> None:
+        """Executes the signal 'edit texture clicked' of the 'emissive' widget."""
+        render_engine = self.render_engine_combo_box.currentText()
+        image_path = self.get_open_file_name()
+
+        if image_path:
+            if render_engine == TextureConnectorUI.ARNOLD:
+                self.edit_material_network_arnold.edit_emissive_file_texture_node(image_path)
+            elif render_engine == TextureConnectorUI.REDSHIFT:
+                self.edit_material_network_redshift.edit_emissive_file_texture_node(image_path)
+            elif render_engine == TextureConnectorUI.V_RAY:
+                self.edit_material_network_v_ray.edit_emissive_file_texture_node(image_path)
+
+            self.emissive_widget.set_texture_path(image_path)
 
     def opacity_edit_texture_clicked_widget(self) -> None:
         """Executes the signal 'edit texture clicked' of the 'opacity' widget."""
@@ -1313,11 +1376,11 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         image_path = self.get_open_file_name()
 
         if image_path:
-            if render_engine == 'Arnold':
+            if render_engine == TextureConnectorUI.ARNOLD:
                 self.edit_material_network_arnold.edit_opacity_file_texture_node(image_path)
-            elif render_engine == 'Redshift':
+            elif render_engine == TextureConnectorUI.REDSHIFT:
                 self.edit_material_network_redshift.edit_opacity_file_texture_node(image_path)
-            elif render_engine == 'V-Ray':
+            elif render_engine == TextureConnectorUI.V_RAY:
                 self.edit_material_network_v_ray.edit_opacity_file_texture_node(image_path)
 
             self.opacity_widget.set_texture_path(image_path)
@@ -1351,6 +1414,9 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
                         return
                 elif self.show_height_items:
                     if not self.height_suffix or self.height_suffix not in file_info_name:
+                        return
+                elif self.show_emissive_items:
+                    if not self.emissive_suffix or self.emissive_suffix not in file_info_name:
                         return
                 elif self.show_opacity_items:
                     if not self.opacity_suffix or self.opacity_suffix not in file_info_name:
@@ -1431,13 +1497,14 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.metalness_widget.clear_texture_info()
         self.normal_widget.clear_texture_info()
         self.height_widget.clear_texture_info()
+        self.emissive_widget.clear_texture_info()
         self.opacity_widget.clear_texture_info()
 
     def create_material_network(self, image_path: str, material_network: any, use_triplanar: bool) -> None:
         """Creates the material network."""
         name = ''
 
-        if not self.use_texture_base_name_check_box.isChecked():
+        if not self.use_texture_name_check_box.isChecked():
             input_dialog = maurice_qt.QInputDialog('Material Name')
 
             if input_dialog.exec_():
@@ -1450,7 +1517,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
         if image_path:
             material_network.set_base_color_settings(
-                enabled=self.use_texture_base_name_check_box.isChecked(),
+                enabled=self.use_texture_name_check_box.isChecked(),
                 suffix=self.base_color_widget.get_texture_suffix())
             material_network.set_roughness_settings(
                 enabled=self.roughness_check_box.isChecked(),
@@ -1464,6 +1531,9 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
             material_network.set_height_settings(
                 enabled=self.height_check_box.isChecked(),
                 suffix=self.height_widget.get_texture_suffix())
+            material_network.set_emissive_settings(
+                enabled=self.emissive_check_box.isChecked(),
+                suffix=self.emissive_widget.get_texture_suffix())
             material_network.set_opacity_settings(
                 enabled=self.opacity_check_box.isChecked(),
                 suffix=self.opacity_widget.get_texture_suffix())
@@ -1471,15 +1541,29 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
             material_network.create(
                 name=name,
                 image_path=image_path,
-                use_texture_base_name=self.use_texture_base_name_check_box.isChecked(),
+                use_texture_base_name=self.use_texture_name_check_box.isChecked(),
                 use_triplanar=use_triplanar)
 
             self.update_materials_items()
             self.update_files_items()
             self.select_material_item(material_network.get_material())
 
+    def load_look_dev_kit_plugin(self) -> None:
+        """Loads the look dev kit plugin."""
+        plugins_loaded = cmds.pluginInfo(listPlugins=True, query=True)
+        use_triplanar = self.use_triplanar_check_box.isChecked()
+
+        if 'lookdevKit' not in plugins_loaded and use_triplanar:
+            if not maurice_qt.QMessageBoxQuestion(
+                    question='Do you want to load the lookdevKit.mll plugin?',
+                    title='Load Plugin').exec_():
+                return
+
+            cmds.loadPlugin('lookdevKit')
+
     def create_material_network_arnold(self, image_path: str = '') -> None:
         """Creates the material network Arnold."""
+        self.load_look_dev_kit_plugin()
         self.clear_textures_info()
 
         material_network_arnold = CreateMaterialNetworkArnold()
@@ -1497,6 +1581,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
     def create_material_network_redshift(self, image_path: str = '') -> None:
         """Creates the material network Redshift."""
+        self.load_look_dev_kit_plugin()
         self.clear_textures_info()
 
         material_network_redshift = CreateMaterialNetworkRedshift()
@@ -1514,6 +1599,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
     def create_material_network_v_ray(self, image_path: str = '') -> None:
         """Creates the material network V-Ray."""
+        self.load_look_dev_kit_plugin()
         self.clear_textures_info()
 
         material_network_v_ray = CreateMaterialNetworkVRay()
@@ -1536,13 +1622,14 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.show_metalness_items = False
         self.show_normal_items = False
         self.show_height_items = False
+        self.show_emissive_items = False
         self.show_opacity_items = False
 
     def display_material_properties(self, material: str) -> None:
         """Displays the material's properties."""
         render_engine = self.render_engine_combo_box.currentText()
 
-        if render_engine == 'Arnold':
+        if render_engine == TextureConnectorUI.ARNOLD:
             if cmds.objectType(material, isType='aiStandardSurface'):
                 self.edit_material_network_arnold = EditMaterialNetworkArnold(material)
 
@@ -1551,7 +1638,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
             else:
                 self.clear_textures_info()
 
-        elif render_engine == 'Redshift':
+        elif render_engine == TextureConnectorUI.REDSHIFT:
             if cmds.objectType(material, isType='RedshiftStandardMaterial'):
                 self.edit_material_network_redshift = EditMaterialNetworkRedshift(material)
 
@@ -1560,7 +1647,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
             else:
                 self.clear_textures_info()
 
-        elif render_engine == 'V-Ray':
+        elif render_engine == TextureConnectorUI.V_RAY:
             if cmds.objectType(material, isType='VRayMtl'):
                 self.edit_material_network_v_ray = EditMaterialNetworkVRay(material)
 
@@ -1581,6 +1668,8 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.normal_widget.set_texture_color_space(self.normal_color_space)
         self.height_widget.set_texture_path(self.height_file_texture_name)
         self.height_widget.set_texture_color_space(self.height_color_space)
+        self.emissive_widget.set_texture_path(self.emissive_file_texture_name)
+        self.emissive_widget.set_texture_color_space(self.emissive_color_space)
         self.opacity_widget.set_texture_path(self.opacity_file_texture_name)
         self.opacity_widget.set_texture_color_space(self.opacity_color_space)
 
@@ -1604,6 +1693,8 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.normal_color_space = material_network.get_normal_color_space()
         self.height_file_texture_name = material_network.get_height_file_texture_name()
         self.height_color_space = material_network.get_height_color_space()
+        self.emissive_file_texture_name = material_network.get_emissive_file_texture_name()
+        self.emissive_color_space = material_network.get_emissive_color_space()
         self.opacity_file_texture_name = material_network.get_opacity_file_texture_name()
         self.opacity_color_space = material_network.get_opacity_color_space()
 
@@ -1616,33 +1707,9 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.settings_main_widget.setVisible(False)
         self.explorer_widget.setVisible(False)
         self.files_widget.setVisible(False)
-        
-    def load_current_settings(self) -> None:
-        """Loads the current settings."""
-        renderer_engines_names = {
-            'Arnold': 'arnold',
-            'Redshift': 'redshift',
-            'V-Ray': 'vRay'}
-
-        render_engine = self.render_engine_combo_box.currentText()
-        renderer_prefix = renderer_engines_names.get(render_engine)
-
-        s = QtCore.QSettings(self.CONFIG_PATH, QtCore.QSettings.IniFormat)
-        s.beginGroup(f'{renderer_prefix}Settings')
-        self.base_color_check_box.setChecked(s.value(f'{renderer_prefix}BaseColor', 'True', str).lower() == 'true')
-        self.roughness_check_box.setChecked(s.value(f'{renderer_prefix}Roughness', 'True', str).lower() == 'true')
-        self.metalness_check_box.setChecked(s.value(f'{renderer_prefix}Metalness', 'True', str).lower() == 'true')
-        self.normal_check_box.setChecked(s.value(f'{renderer_prefix}Normal', 'True', str).lower() == 'true')
-        self.height_check_box.setChecked(s.value(f'{renderer_prefix}Height', 'True', str).lower() == 'true')
-        self.opacity_check_box.setChecked(s.value(f'{renderer_prefix}Opacity', 'True', str).lower() == 'true')
-        self.use_triplanar_check_box.setChecked(s.value(
-            f'{renderer_prefix}UseTriplanar', 'False', str).lower() == 'true')
-        self.use_texture_base_name_check_box.setChecked( s.value(
-            f'{renderer_prefix}UseTextureBaseName', 'True', str).lower() == 'true')
-        s.endGroup()
 
     @staticmethod
-    def open_in_explorer(file_path):
+    def open_in_explorer(file_path: str) -> bool:
         file_info = QtCore.QFileInfo(file_path)
         args = []
 
@@ -1657,7 +1724,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         return False
 
     @staticmethod
-    def open_in_finder(file_path):
+    def open_in_finder(file_path: str) -> bool:
         args = ['-e', 'tell application "Finder"', '-e', 'activate', '-e', 'select POSIX file "{0}"'.format(file_path),
                 '-e', 'end tell', '-e', 'return']
 
@@ -1674,6 +1741,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.show_metalness_images_action.setIcon(QtGui.QIcon(self.icons['square-m.png']))
         self.show_normal_images_action.setIcon(QtGui.QIcon(self.icons['square-n.png']))
         self.show_height_images_action.setIcon(QtGui.QIcon(self.icons['square-h.png']))
+        self.show_emissive_images_action.setIcon(QtGui.QIcon(self.icons['square-o.png']))
         self.show_opacity_images_action.setIcon(QtGui.QIcon(self.icons['square-o.png']))
 
     def select_material_item(self, material_name: str) -> None:
@@ -1714,13 +1782,13 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.render_engine_combo_box.clear()
 
         if render_engines[0] in plugins_loaded:
-            self.render_engine_combo_box.addItem('Arnold')
+            self.render_engine_combo_box.addItem(TextureConnectorUI.ARNOLD)
 
         if render_engines[1] in plugins_loaded:
-            self.render_engine_combo_box.addItem('Redshift')
+            self.render_engine_combo_box.addItem(TextureConnectorUI.REDSHIFT)
 
         if render_engines[2] in plugins_loaded:
-            self.render_engine_combo_box.addItem('V-Ray')
+            self.render_engine_combo_box.addItem(TextureConnectorUI.V_RAY)
 
         if current_render_engine:
             self.render_engine_combo_box.setCurrentText(current_render_engine)
@@ -1827,11 +1895,11 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         """Updates the materials items."""
         render_engine = self.render_engine_combo_box.currentText()
 
-        if render_engine == 'Arnold':
+        if render_engine == TextureConnectorUI.ARNOLD:
             material_type = 'aiStandardSurface'
-        elif render_engine == 'Redshift':
+        elif render_engine == TextureConnectorUI.REDSHIFT:
             material_type = 'RedshiftStandardMaterial'
-        elif render_engine == 'V-Ray':
+        elif render_engine == TextureConnectorUI.V_RAY:
             material_type = 'VRayMtl'
         else:
             material_type = ''
@@ -1860,9 +1928,9 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         super(TextureConnectorUI, self).showEvent(event)
 
         renderer_engines_names = {
-            'arnold': 'Arnold',
-            'redshift': 'Redshift',
-            'vray': 'V-Ray'}
+            'arnold': TextureConnectorUI.ARNOLD,
+            'redshift': TextureConnectorUI.REDSHIFT,
+            'vray': TextureConnectorUI.V_RAY}
 
         maya_current_render = cmds.getAttr('defaultRenderGlobals.currentRenderer')
         self.render_engine_combo_box.setCurrentText(renderer_engines_names.get(maya_current_render))
@@ -1877,4 +1945,5 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
 
 if __name__ == '__main__':
-    TextureConnectorUI().show_window()
+    texture_connector = TextureConnectorUI()
+    texture_connector.show_window()

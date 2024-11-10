@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: edit_material_network_redshift.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-09-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -15,6 +15,7 @@ class EditMaterialNetworkRedshift(EditMaterialNetwork):
     MATERIAL_NODE = 'RedshiftStandardMaterial'
 
     BASE_COLOR_MATERIAL_INPUT_NAME = 'base_color'
+    EMISSIVE_MATERIAL_INPUT_NAME = 'emission_color'
     METALNESS_MATERIAL_INPUT_NAME = 'metalness'
     NORMAL_MATERIAL_INPUT_NAME = 'bump_input'
     OPACITY_MATERIAL_INPUT_NAME = 'opacity_color'

@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: create_material_network_redshift.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-09-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -17,6 +17,7 @@ class CreateMaterialNetworkRedshift(CreateMaterialNetwork):
     MATERIAL_NODE = 'RedshiftStandardMaterial'
 
     BASE_COLOR_MATERIAL_INPUT_NAME = 'base_color'
+    EMISSIVE_MATERIAL_INPUT_NAME = 'emission_color'
     METALNESS_MATERIAL_INPUT_NAME = 'metalness'
     NORMAL_MATERIAL_INPUT_NAME = 'bump_input'
     OPACITY_MATERIAL_INPUT_NAME = 'opacity_color'
@@ -29,6 +30,12 @@ class CreateMaterialNetworkRedshift(CreateMaterialNetwork):
     def __init__(self):
         super(CreateMaterialNetworkRedshift, self).__init__()
 
+    def create_emissive_network(self) -> None:
+        """Create the emissive network."""
+        super(CreateMaterialNetworkRedshift, self).create_emissive_network()
+
+        cmds.setAttr(f'{self.material}.emission_weight', 1)
+
     def create_triplanar_node_network(self, name: str) -> str:
         """Creates the triplanar node network."""
         super(CreateMaterialNetworkRedshift, self).create_triplanar_node_network(name)
@@ -37,8 +44,7 @@ class CreateMaterialNetworkRedshift(CreateMaterialNetwork):
 
         cmds.setAttr(f'{triplanar_node}.projSpaceType', 0)
 
-        cmds.connectAttr(f'{self.float_constant_node}.outFloat', f'{triplanar_node}.scale.scale0', force=True)
-        cmds.connectAttr(f'{self.float_constant_node}.outFloat', f'{triplanar_node}.scale.scale1', force=True)
-        cmds.connectAttr(f'{self.float_constant_node}.outFloat', f'{triplanar_node}.scale.scale2', force=True)
+        for i in range(3):
+            cmds.connectAttr(f'{self.float_constant_node}.outFloat', f'{triplanar_node}.scale.scale{i}', force=True)
 
         return triplanar_node

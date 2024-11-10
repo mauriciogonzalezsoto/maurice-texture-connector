@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: edit_material_network.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-10-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -18,6 +18,7 @@ class EditMaterialNetwork(object):
     MATERIAL_NODE = None
 
     BASE_COLOR_MATERIAL_INPUT_NAME = None
+    EMISSIVE_MATERIAL_INPUT_NAME = None
     METALNESS_MATERIAL_INPUT_NAME = None
     NORMAL_MATERIAL_INPUT_NAME = None
     OPACITY_MATERIAL_INPUT_NAME = None
@@ -28,6 +29,7 @@ class EditMaterialNetwork(object):
         self.material = material
 
         self.base_color_file_node = ''
+        self.emissive_file_node = ''
         self.roughness_file_node = ''
         self.metalness_file_node = ''
         self.normal_file_node = ''
@@ -39,6 +41,10 @@ class EditMaterialNetwork(object):
     def edit_base_color_file_texture_node(self, texture_path: str) -> None:
         """Edits the base color file texture node."""
         self.set_file_texture_name(file_node=self.base_color_file_node, texture_path=texture_path)
+
+    def edit_emissive_file_texture_node(self, texture_path: str) -> None:
+        """Edits the emissive file texture node."""
+        self.set_file_texture_name(file_node=self.emissive_file_node, texture_path=texture_path)
 
     def edit_height_file_texture_node(self, texture_path: str) -> None:
         """Edits the height file texture node."""
@@ -72,6 +78,14 @@ class EditMaterialNetwork(object):
     def get_color_space(file_node: str) -> str:
         """Gets the color space."""
         return cmds.getAttr(f'{file_node}.colorSpace') if file_node else ''
+    
+    def get_emissive_color_space(self) -> str:
+        """Gets the emissive color space."""
+        return self.get_color_space(file_node=self.emissive_file_node)
+    
+    def get_emissive_file_texture_name(self) -> str:
+        """Gets the emissive file texture name."""
+        return self.get_file_texture_name(file_node=self.emissive_file_node)
 
     @staticmethod
     def get_file_node(channel_name: str, top_node: str) -> str:
@@ -124,7 +138,7 @@ class EditMaterialNetwork(object):
                         channel_name='Base Color',
                         top_node=material_connection)
 
-                # Specular roughness.
+                # Roughness.
                 if f'{self.material}.{self.ROUGHNESS_MATERIAL_INPUT_NAME}' in material_plug_nodes:
                     self.roughness_file_node = self.get_file_node(
                         channel_name='Roughness',
@@ -140,6 +154,12 @@ class EditMaterialNetwork(object):
                 if f'{self.material}.{self.NORMAL_MATERIAL_INPUT_NAME}' in material_plug_nodes:
                     self.normal_file_node = self.get_file_node(
                         channel_name='Normal',
+                        top_node=material_connection)
+
+                # Emissive.
+                if f'{self.material}.{self.EMISSIVE_MATERIAL_INPUT_NAME}' in material_plug_nodes:
+                    self.emissive_file_node = self.get_file_node(
+                        channel_name='Emissive',
                         top_node=material_connection)
 
                 # Opacity.

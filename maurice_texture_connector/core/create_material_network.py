@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: create_material_network.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-10-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -24,6 +24,7 @@ class CreateMaterialNetwork(object):
     USE_BUMP_2D_NODE = True
 
     BASE_COLOR_MATERIAL_INPUT_NAME = None
+    EMISSIVE_MATERIAL_INPUT_NAME = None
     METALNESS_MATERIAL_INPUT_NAME = None
     NORMAL_MATERIAL_INPUT_NAME = None
     OPACITY_MATERIAL_INPUT_NAME = None
@@ -33,15 +34,13 @@ class CreateMaterialNetwork(object):
     TRIPLANAR_ALPHA_OUTPUT_NAME = None
     TRIPLANAR_COLOR_OUTPUT_NAME = None
 
-
     def __init__(self):
         """Initializes class attributes."""
         self.file_digits_suffix = None
         self.file_stem = None
         self.name = None
-        self.plugins_loaded = []
         self.use_triplanar = False
-        self.use_udim = False
+        self.use_multi_tiled = False
 
         # Maya node class variables.
         self.float_constant_node = ''
@@ -85,6 +84,13 @@ class CreateMaterialNetwork(object):
         self.height_triplanar_node = ''
         self.is_height_enabled = False
 
+        # Emissive class variables.
+        self.emissive_file_node = ''
+        self.emissive_file_paths = []
+        self.emissive_suffix = ''
+        self.emissive_triplanar_node = ''
+        self.is_emissive_enabled = False
+
         # Opacity class variables.
         self.opacity_file_node = ''
         self.opacity_file_paths = []
@@ -92,14 +98,15 @@ class CreateMaterialNetwork(object):
         self.opacity_triplanar_node = ''
         self.is_opacity_enabled = False
 
-    def are_plugins_loaded(self, render_engine_plugin_name: str, use_triplanar: bool) -> bool:
+    @staticmethod
+    def are_plugins_loaded(render_engine_plugin_name: str, use_triplanar: bool) -> bool:
         """Checks if the required plugins are loaded."""
-        self.plugins_loaded = cmds.pluginInfo(listPlugins=True, query=True)
+        plugins_loaded = cmds.pluginInfo(listPlugins=True, query=True)
 
-        if render_engine_plugin_name not in self.plugins_loaded:
+        if render_engine_plugin_name not in plugins_loaded:
             MGlobal.displayError(f'[{maurice.TEXTURE_CONNECTOR}] \'{render_engine_plugin_name}\' plugin is not loaded.')
             return False
-        elif 'lookdevKit' not in self.plugins_loaded and use_triplanar:
+        elif 'lookdevKit' not in plugins_loaded and use_triplanar:
             MGlobal.displayError(f'[{maurice.TEXTURE_CONNECTOR}] \'lookdevKit\' plugin is not loaded.')
             return False
         else:
@@ -116,18 +123,16 @@ class CreateMaterialNetwork(object):
         elif not maurice_utils.is_image(image_path):
             MGlobal.displayError(f'[{maurice.TEXTURE_CONNECTOR}] The file is not an image.')
             return
-
-        if use_texture_base_name:
-            self.name = self.get_texture_base_name(image_path).removesuffix('_')
+        elif use_texture_base_name:
+            self.name = self.get_texture_base_name(image_path)
 
             if not self.name:
-                MGlobal.displayError(f'[{maurice.TEXTURE_CONNECTOR}] It was not possible to create the shading network '
-                                     f'with the path \'{image_path}\'.')
+                MGlobal.displayError(f'[{maurice.TEXTURE_CONNECTOR}] Suffix not found.')
                 return
 
         objects = cmds.ls(long=True, selection=True)
 
-        cmds.undoInfo(chunkName='mgAutoShadingNetwork', openChunk=True)
+        cmds.undoInfo(chunkName='mgMaterialNetwork', openChunk=True)
 
         self.get_textures_paths(image_path)
         self.create_material()
@@ -147,6 +152,9 @@ class CreateMaterialNetwork(object):
         if self.is_height_enabled and self.height_file_paths:
             self.create_height_network()
 
+        if self.is_emissive_enabled and self.emissive_file_paths:
+            self.create_emissive_network()
+
         if self.is_opacity_enabled and self.opacity_file_paths:
             self.create_opacity_network()
 
@@ -159,7 +167,7 @@ class CreateMaterialNetwork(object):
 
         MGlobal.displayInfo(f'[{maurice.TEXTURE_CONNECTOR}] Created material network successfully.')
 
-        cmds.undoInfo(chunkName='mgAutoShadingNetwork', closeChunk=True)
+        cmds.undoInfo(chunkName='mgMaterialNetwork', closeChunk=True)
 
     def create_standard_network(self, material_input_name: str, suffix: str, out_alpha: bool = False) -> tuple:
         """Creates the standard network."""
@@ -170,6 +178,7 @@ class CreateMaterialNetwork(object):
 
         if self.use_triplanar:
             triplanar_node = self.create_triplanar_node_network(name=name)
+            out = self.TRIPLANAR_ALPHA_OUTPUT_NAME if out_alpha else self.TRIPLANAR_COLOR_OUTPUT_NAME
 
             cmds.connectAttr(
                 f'{file_node}.outColor',
@@ -177,14 +186,14 @@ class CreateMaterialNetwork(object):
                 force=True)
 
             cmds.connectAttr(
-                f'{triplanar_node}.{self.TRIPLANAR_COLOR_OUTPUT_NAME}',
+                f'{triplanar_node}.{out}',
                 f'{self.material}.{material_input_name}',
                 force=True)
         else:
-            out = '.outAlpha' if out_alpha else '.outColor'
+            out = 'outAlpha' if out_alpha else 'outColor'
 
             cmds.connectAttr(
-                f'{file_node}{out}',
+                f'{file_node}.{out}',
                 f'{self.material}.{material_input_name}',
                 force=True)
 
@@ -200,7 +209,7 @@ class CreateMaterialNetwork(object):
             self.set_color_texture_file_node_settings(
                 file_node=self.base_color_file_node,
                 file_texture_name=self.base_color_file_paths[0],
-                use_udim=self.use_udim)
+                use_multi_tiled=self.use_multi_tiled)
 
     def create_bump_2d_node(self) -> str:
         """Creates the bump 2D node."""
@@ -208,6 +217,18 @@ class CreateMaterialNetwork(object):
         cmds.setAttr(f'{bump_2d_node}.bumpInterp', 1)
 
         return bump_2d_node
+
+    def create_emissive_network(self) -> None:
+        """Create the emissive network."""
+        self.emissive_file_node, self.emissive_triplanar_node = self.create_standard_network(
+            material_input_name=self.EMISSIVE_MATERIAL_INPUT_NAME,
+            suffix=self.emissive_suffix)
+
+        if self.emissive_file_paths:
+            self.set_color_texture_file_node_settings(
+                file_node=self.emissive_file_node,
+                file_texture_name=self.emissive_file_paths[0],
+                use_multi_tiled=self.use_multi_tiled)
 
     def create_file_node_network(self, name: str) -> str:
         """Creates the file node network."""
@@ -284,7 +305,7 @@ class CreateMaterialNetwork(object):
             self.set_data_texture_file_node_settings(
                 file_node=self.height_file_node,
                 file_texture_name=self.height_file_paths[0],
-                use_udim=self.use_udim)
+                use_multi_tiled=self.use_multi_tiled)
 
     def create_material(self):
         """Creates the material."""
@@ -311,7 +332,7 @@ class CreateMaterialNetwork(object):
             self.set_data_texture_file_node_settings(
                 file_node=self.metalness_file_node,
                 file_texture_name=self.metalness_file_paths[0],
-                use_udim=self.use_udim)
+                use_multi_tiled=self.use_multi_tiled)
 
     def create_normal_network(self) -> None:
         """Crates the normal network."""
@@ -356,7 +377,7 @@ class CreateMaterialNetwork(object):
             self.set_data_texture_file_node_settings(
                 file_node=self.normal_file_node,
                 file_texture_name=self.normal_file_paths[0],
-                use_udim=self.use_udim)
+                use_multi_tiled=self.use_multi_tiled)
 
     def create_place_2d_texture_node(self) -> None:
         """Creates the place 2D texture node."""
@@ -375,7 +396,7 @@ class CreateMaterialNetwork(object):
             self.set_data_texture_file_node_settings(
                 file_node=self.opacity_file_node,
                 file_texture_name=self.opacity_file_paths[0],
-                use_udim=self.use_udim)
+                use_multi_tiled=self.use_multi_tiled)
 
     def create_roughness_network(self) -> None:
         """Creates the roughness network."""
@@ -388,7 +409,7 @@ class CreateMaterialNetwork(object):
             self.set_data_texture_file_node_settings(
                 file_node=self.roughness_file_node,
                 file_texture_name=self.roughness_file_paths[0],
-                use_udim=self.use_udim)
+                use_multi_tiled=self.use_multi_tiled)
 
     def create_triplanar_node_network(self, name: str) -> any:
         """Creates the triplanar node network."""
@@ -398,7 +419,7 @@ class CreateMaterialNetwork(object):
     @staticmethod
     def extract_pattern_match(file_stem: str, pattern_suffix: str) -> list:
         """Extracts the patter match."""
-        pattern = re.compile(f'_{pattern_suffix}(_|$)')
+        pattern = re.compile(f'_{pattern_suffix}(_|$)', re.IGNORECASE)
         pattern_split = pattern.split(file_stem, 1)
 
         return pattern_split
@@ -409,16 +430,17 @@ class CreateMaterialNetwork(object):
 
     def get_texture_base_name(self, file_path: str) -> str:
         """Gets the texture base name."""
+        self.get_multi_tiled_mode(file_path)
+
         suffixes = (
             self.base_color_suffix,
             self.roughness_suffix,
             self.metalness_suffix,
             self.normal_suffix,
             self.height_suffix,
+            self.emissive_suffix,
             self.opacity_suffix
         )
-
-        self.get_udim_mode(file_path=file_path)
 
         for suffix in suffixes:
             pattern_split = self.extract_pattern_match(self.file_stem, suffix)
@@ -437,6 +459,7 @@ class CreateMaterialNetwork(object):
         self.metalness_file_paths.clear()
         self.normal_file_paths.clear()
         self.height_file_paths.clear()
+        self.emissive_file_paths.clear()
         self.opacity_file_paths.clear()
 
         texture_folder = os.path.dirname(texture_path)
@@ -449,7 +472,7 @@ class CreateMaterialNetwork(object):
             if maurice_utils.is_image(file_path):
                 file_stem = Path(file_short_name).stem
 
-                if self.use_udim:
+                if self.use_multi_tiled:
                     file_stem = file_stem.removesuffix(f'.{self.file_digits_suffix}')
 
                 if file_stem.startswith(texture_base_name):
@@ -458,6 +481,7 @@ class CreateMaterialNetwork(object):
                     metalness_pattern_split = self.extract_pattern_match(file_stem, self.metalness_suffix)
                     normal_pattern_split = self.extract_pattern_match(file_stem, self.normal_suffix)
                     height_pattern_split = self.extract_pattern_match(file_stem, self.height_suffix)
+                    emissive_pattern_split = self.extract_pattern_match(file_stem, self.emissive_suffix)
                     opacity_pattern_split = self.extract_pattern_match(file_stem, self.opacity_suffix)
 
                     if len(base_color_pattern_split) > 1:
@@ -475,18 +499,21 @@ class CreateMaterialNetwork(object):
                     if len(height_pattern_split) > 1:
                         self.height_file_paths.append(file_path)
 
+                    if len(emissive_pattern_split) > 1:
+                        self.emissive_file_paths.append(file_path)
+
                     if len(opacity_pattern_split) > 1:
                         self.opacity_file_paths.append(file_path)
 
-    def get_udim_mode(self, file_path: str) -> None:
-        """Gets UDIM mde."""
+    def get_multi_tiled_mode(self, file_path: str) -> None:
+        """Gets if the texture is multi tiled."""
         self.file_stem = Path(file_path).stem
         self.file_stem, *digits_suffix = self.file_stem.rsplit('.', 1)
 
         if digits_suffix and digits_suffix[0].isdigit():
             self.file_digits_suffix = digits_suffix[0]
             self.file_stem = self.file_stem.removesuffix(f'.{self.file_digits_suffix}')
-            self.use_udim = True
+            self.use_multi_tiled = True
 
     def set_base_color_settings(self, enabled: bool, suffix: str) -> None:
         """Sets base color settings."""
@@ -496,22 +523,32 @@ class CreateMaterialNetwork(object):
         self.base_color_suffix = suffix
         self.is_base_color_enabled = enabled
 
-    def set_color_texture_file_node_settings(self, file_node: str, file_texture_name: str, use_udim: bool) -> None:
+    def set_color_texture_file_node_settings(self, file_node: str, file_texture_name: str,
+                                             use_multi_tiled: bool) -> None:
         """Sets the color texture file node settings."""
         self.set_texture_file_node_settings(
             file_node=file_node,
             file_texture_name=file_texture_name,
-            use_udim=use_udim)
+            use_multi_tiled=use_multi_tiled)
 
-    def set_data_texture_file_node_settings(self, file_node: str, file_texture_name: str, use_udim: bool) -> None:
+    def set_data_texture_file_node_settings(self, file_node: str, file_texture_name: str,
+                                            use_multi_tiled: bool) -> None:
         """Sets the data texture file node settings."""
         self.set_texture_file_node_settings(
             file_node=file_node,
             file_texture_name=file_texture_name,
-            use_udim=use_udim)
+            use_multi_tiled=use_multi_tiled)
 
         cmds.setAttr(f'{file_node}.alphaIsLuminance', True)
         cmds.setAttr(f'{file_node}.colorSpace', 'Raw', type='string')
+
+    def set_emissive_settings(self, enabled: bool, suffix: str) -> None:
+        """Sets emissive settings."""
+        if not suffix:
+            MGlobal.displayWarning(f'[{maurice.TEXTURE_CONNECTOR}] There is no suffix for emissive.')
+
+        self.emissive_suffix = suffix
+        self.is_emissive_enabled = enabled
 
     def set_height_settings(self, enabled: bool, suffix: str) -> None:
         """Sets height settings."""
@@ -554,10 +591,10 @@ class CreateMaterialNetwork(object):
         self.is_roughness_enabled = enabled
 
     @staticmethod
-    def set_texture_file_node_settings(file_node: str, file_texture_name: str, use_udim: bool) -> None:
+    def set_texture_file_node_settings(file_node: str, file_texture_name: str, use_multi_tiled: bool) -> None:
         """Sets the texture file node settings."""
         cmds.setAttr(f'{file_node}.ignoreColorSpaceFileRules', True)
         cmds.setAttr(f'{file_node}.fileTextureName', file_texture_name, type='string')
 
-        if use_udim:
+        if use_multi_tiled:
             cmds.setAttr(f'{file_node}.uvTilingMode', 3)

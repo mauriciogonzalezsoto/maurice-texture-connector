@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: create_network_network_v_ray.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-10-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -20,6 +20,7 @@ class CreateMaterialNetworkVRay(ff.CreateMaterialNetwork):
     MATERIAL_NODE = 'VRayMtl'
 
     BASE_COLOR_MATERIAL_INPUT_NAME = 'color'
+    EMISSIVE_MATERIAL_INPUT_NAME = 'illumColor'
     METALNESS_MATERIAL_INPUT_NAME = 'metalness'
     NORMAL_MATERIAL_INPUT_NAME = 'bumpMap'
     OPACITY_MATERIAL_INPUT_NAME = 'opacityMap'
@@ -29,7 +30,7 @@ class CreateMaterialNetworkVRay(ff.CreateMaterialNetwork):
     TRIPLANAR_ALPHA_OUTPUT_NAME = 'outAlpha'
     TRIPLANAR_COLOR_OUTPUT_NAME = 'outColor'
 
-    USE_BUMP_2D = False
+    USE_BUMP_2D_NODE = False
 
     def __init__(self):
         """Initializes class attributes."""

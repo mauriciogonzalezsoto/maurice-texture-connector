@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: edit_network_network_v_ray.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-10-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -15,6 +15,7 @@ class EditMaterialNetworkVRay(EditMaterialNetwork):
     MATERIAL_NODE = 'VRayMtl'
 
     BASE_COLOR_MATERIAL_INPUT_NAME = 'color'
+    EMISSIVE_MATERIAL_INPUT_NAME = 'illumColor'
     METALNESS_MATERIAL_INPUT_NAME = 'metalness'
     NORMAL_MATERIAL_INPUT_NAME = 'bumpMap'
     OPACITY_MATERIAL_INPUT_NAME = 'opacityMap'

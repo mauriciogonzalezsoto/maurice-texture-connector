@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: edit_material_network_arnold.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-09-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -15,6 +15,7 @@ class EditMaterialNetworkArnold(EditMaterialNetwork):
     MATERIAL_NODE = 'aiStandardSurface'
 
     BASE_COLOR_MATERIAL_INPUT_NAME = 'baseColor'
+    EMISSIVE_MATERIAL_INPUT_NAME = 'emissionColor'
     METALNESS_MATERIAL_INPUT_NAME = 'metalness'
     NORMAL_MATERIAL_INPUT_NAME = 'normalCamera'
     OPACITY_MATERIAL_INPUT_NAME = 'opacity'

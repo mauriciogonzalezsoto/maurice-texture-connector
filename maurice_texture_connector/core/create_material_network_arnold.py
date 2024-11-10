@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: create_material_network_arnold.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-09-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -17,6 +17,7 @@ class CreateMaterialNetworkArnold(CreateMaterialNetwork):
     MATERIAL_NODE = 'aiStandardSurface'
 
     BASE_COLOR_MATERIAL_INPUT_NAME = 'baseColor'
+    EMISSIVE_MATERIAL_INPUT_NAME = 'emissionColor'
     METALNESS_MATERIAL_INPUT_NAME = 'metalness'
     NORMAL_MATERIAL_INPUT_NAME = 'normalCamera'
     OPACITY_MATERIAL_INPUT_NAME = 'opacity'
@@ -29,6 +30,12 @@ class CreateMaterialNetworkArnold(CreateMaterialNetwork):
     def __init__(self):
         super(CreateMaterialNetworkArnold, self).__init__()
 
+    def create_emissive_network(self) -> None:
+        """Create the emissive network."""
+        super(CreateMaterialNetworkArnold, self).create_emissive_network()
+
+        cmds.setAttr(f'{self.material}.emission', 1)
+
     def create_triplanar_node_network(self, name: str) -> str:
         """Creates the triplanar node network."""
         super(CreateMaterialNetworkArnold, self).create_triplanar_node_network(name)
@@ -37,8 +44,7 @@ class CreateMaterialNetworkArnold(CreateMaterialNetwork):
 
         cmds.setAttr(f'{triplanar_node}.coordSpace', 0)
 
-        cmds.connectAttr(f'{self.float_constant_node}.outFloat', f'{triplanar_node}.scaleX', force=True)
-        cmds.connectAttr(f'{self.float_constant_node}.outFloat', f'{triplanar_node}.scaleY', force=True)
-        cmds.connectAttr(f'{self.float_constant_node}.outFloat', f'{triplanar_node}.scaleZ', force=True)
+        for axis in ['X', 'Y', 'Z']:
+            cmds.connectAttr(f'{self.float_constant_node}.outFloat', f'{triplanar_node}.scale{axis}', force=True)
 
         return triplanar_node
