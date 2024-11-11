@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: splitter.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-10-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -12,7 +12,7 @@ try:
 except ImportError:
     from PySide2 import QtWidgets
 
-import maurice_texture_connector.ui.maurice_qt.widgets_styles as widgets_styles
+from maurice_texture_connector.ui.maurice_qt.maurice_widgets_styles import MauriceWidgetsStyle
 
 
 class QSplitter(QtWidgets.QSplitter):
@@ -22,5 +22,7 @@ class QSplitter(QtWidgets.QSplitter):
         """Initializes class attributes."""
         super(QSplitter, self).__init__(*args)
 
+        maurice_widgets_style = MauriceWidgetsStyle()
+
         # QSplitter settings.
-        self.setStyleSheet(widgets_styles.splitter_style())
+        self.setStyleSheet(maurice_widgets_style.splitter())

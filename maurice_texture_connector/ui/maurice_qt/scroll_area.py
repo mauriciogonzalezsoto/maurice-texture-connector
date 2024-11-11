@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: scroll_area.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-10-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -14,7 +14,7 @@ except ImportError:
     from PySide2 import QtWidgets
     from PySide2 import QtCore
 
-import maurice_texture_connector.ui.maurice_qt.widgets_styles as widgets_styles
+from maurice_texture_connector.ui.maurice_qt.maurice_widgets_styles import MauriceWidgetsStyle
 
 
 class QScrollArea(QtWidgets.QScrollArea):
@@ -24,9 +24,11 @@ class QScrollArea(QtWidgets.QScrollArea):
         """Initializes class attributes."""
         super(QScrollArea, self).__init__(*args)
 
+        maurice_widgets_style = MauriceWidgetsStyle()
+
         # QScrollBar settings.
         self.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-        self.setStyleSheet(widgets_styles.scroll_area_style())
+        self.setStyleSheet(maurice_widgets_style.scroll_area())
         self.setWidgetResizable(True)

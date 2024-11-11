@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: texture_settings_widget.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-09-2024
+Updated Date: 11-10-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -31,6 +31,8 @@ class TextureSettingsWidget(QtWidgets.QWidget):
     def __init__(self):
         """Initializes class attributes."""
         super(TextureSettingsWidget, self).__init__()
+
+        self.maurice_widgets_style = maurice_qt.MauriceWidgetsStyle()
 
         # Files path class variables.
         self.icons = maurice_utils.get_icons()
@@ -70,7 +72,7 @@ class TextureSettingsWidget(QtWidgets.QWidget):
         # Texture name QLabel.
         self.texture_name_label = maurice_qt.QLabel()
         self.texture_name_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
-        self.texture_name_label.setContentsMargins(maurice_qt.widgets_attributes.spacing * 3, 0, 0, 0)
+        self.texture_name_label.setContentsMargins(self.maurice_widgets_style.SPACING * 3, 0, 0, 0)
         self.texture_name_label.setFixedWidth(maurice_utils.get_value_by_ppi(77, 104))
         self.texture_name_label.setFont(texture_name_font)
 
@@ -88,12 +90,12 @@ class TextureSettingsWidget(QtWidgets.QWidget):
         # Expand-collapse settings QPushButton.
         self.expand_collapse_settings_push_button = maurice_qt.QPushButton()
         self.expand_collapse_settings_push_button.setFixedSize(QtCore.QSize(
-            maurice_qt.widgets_attributes.height,
-            maurice_qt.widgets_attributes.height))
+            self.maurice_widgets_style.HEIGHT,
+            self.maurice_widgets_style.HEIGHT))
         self.expand_collapse_settings_push_button.setIcon(QtGui.QIcon(self.icons['caret-right.png']))
         self.expand_collapse_settings_push_button.setIconSize(QtCore.QSize(
-            maurice_qt.widgets_attributes.height,
-            maurice_qt.widgets_attributes.height))
+            self.maurice_widgets_style.HEIGHT,
+            self.maurice_widgets_style.HEIGHT))
         self.expand_collapse_settings_push_button.set_transparent_background()
 
         # ==============================================================================================================
@@ -113,13 +115,12 @@ class TextureSettingsWidget(QtWidgets.QWidget):
         # ==============================================================================================================
         # Header QGroupBox.
         header_group_box = QtWidgets.QGroupBox()
-        header_group_box.setStyleSheet('''
-            QGroupBox {
+        header_group_box.setStyleSheet(f'''
+            QGroupBox {{
                 background-color: rgb(45, 45, 45); 
-                border-radius: %dpx;
-                padding: %dpx;}''' % (
-            maurice_qt.widgets_attributes.border_radius,
-            maurice_qt.widgets_attributes.spacing))
+                border-radius: {self.maurice_widgets_style.BORDER_RADIUS}px;
+                padding: {self.maurice_widgets_style.SPACING}px;}}
+            ''')
         self.main_layout.addWidget(header_group_box)
 
         # Header QHBoxLayout.
@@ -136,9 +137,9 @@ class TextureSettingsWidget(QtWidgets.QWidget):
         # Settings QVBoxLayout.
         settings_v_box_layout = maurice_qt.QVBoxLayout()
         settings_v_box_layout.setContentsMargins(
-            maurice_qt.widgets_attributes.spacing,
+            self.maurice_widgets_style.SPACING,
             0,
-            maurice_qt.widgets_attributes.spacing,
+            self.maurice_widgets_style.SPACING,
             0)
         self.main_layout.addLayout(settings_v_box_layout)
 
@@ -191,7 +192,7 @@ class TextureSettingsWidget(QtWidgets.QWidget):
     def clear_texture_info(self) -> None:
         """Clears the texture info."""
         self.texture_path_label.setText('')
-        self.texture_path_label.setStyleSheet(maurice_qt.label_style() + 'QLabel {color: #ffffff}')
+        self.texture_path_label.setStyleSheet(self.maurice_widgets_style.label() + 'QLabel {color: #ffffff}')
 
         self.texture_path_push_button.setVisible(False)
 
@@ -219,7 +220,7 @@ class TextureSettingsWidget(QtWidgets.QWidget):
             else:
                 color = '#fa0c08'
 
-            self.texture_path_label.setStyleSheet(maurice_qt.line_edit_style() + 'QLabel {color: %s}' % color)
+            self.texture_path_label.setStyleSheet(self.maurice_widgets_style.line_edit() + f'QLabel {{color: {color}}}')
             self.texture_path_label.setText(texture_path)
             self.texture_path_push_button.setVisible(True)
 

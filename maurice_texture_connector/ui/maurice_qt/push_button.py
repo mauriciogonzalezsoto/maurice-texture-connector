@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: push_button.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-10-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -14,64 +14,59 @@ except ImportError:
     from PySide2 import QtWidgets
     from PySide2 import QtCore
 
-import maurice_texture_connector.ui.maurice_qt.widgets_attributes as widgets_attributes
-import maurice_texture_connector.ui.maurice_qt.widgets_styles as widgets_styles
+from maurice_texture_connector.ui.maurice_qt.maurice_widgets_styles import MauriceWidgetsStyle
+import maurice_texture_connector.utils as maurice_utils
 
 
 class QPushButton(QtWidgets.QPushButton):
     """QPushButton."""
-    ICON_SIZE = widgets_attributes.push_button_icon_size
-    ICON_SMALL_SIZE = widgets_attributes.push_button_icon_small_size
+    ICON_SIZE = maurice_utils.get_value_by_ppi(16, 24)
+    ICON_SMALL_SIZE = maurice_utils.get_value_by_ppi(12, 24)
 
     clicked_and_alt = QtCore.Signal()
     clicked_and_ctrl = QtCore.Signal()
-
-    POP_UP_WINDOW = None
 
     def __init__(self, *args):
         """Initializes class attributes."""
         super(QPushButton, self).__init__(*args)
 
-        # QPushButton class variables.
-        self.pop_up_window = None
+        self.maurice_widgets_style = MauriceWidgetsStyle()
 
         # QPushButton settings.
-        self.setFixedHeight(widgets_attributes.push_button_height)
-        self.setIconSize(QtCore.QSize(QPushButton.ICON_SIZE[0], QPushButton.ICON_SIZE[1]))
-        self.setStyleSheet(widgets_styles.push_button_style())
+        self.setFixedHeight(maurice_utils.get_value_by_ppi(26, 40))
+        self.setIconSize(QtCore.QSize(QPushButton.ICON_SIZE, QPushButton.ICON_SIZE))
+        self.setStyleSheet(self.maurice_widgets_style.push_button())
 
     def set_small_push_button_size(self) -> None:
         """Sets small push button size."""
         self.setFixedSize(
-            widgets_attributes.push_button_small_height,
-            widgets_attributes.push_button_small_height)
-        self.setIconSize(QtCore.QSize(QPushButton.ICON_SMALL_SIZE[0], QPushButton.ICON_SMALL_SIZE[1]))
+            self.maurice_widgets_style.HEIGHT,
+            self.maurice_widgets_style.HEIGHT)
+        self.setIconSize(QtCore.QSize(QPushButton.ICON_SMALL_SIZE, QPushButton.ICON_SMALL_SIZE))
 
     def set_transparent_background(self) -> None:
         """Sets transparent background."""
-        self.setStyleSheet('''
-            QPushButton {
+        style = f'''
+            QPushButton {{
                 background-color: transparent;
-                border: 0px;} 
-            QPushButton:hover {
-                border: 0px;}
-                
-            QToolTip {
+                border: 0px;}}
+
+            QPushButton:hover {{
+                border: 0px;}}
+
+            QToolTip {{
             background-color: rgb(45, 45, 45);
             color: white; 
-            border: 1px solid %s;}
-            ''' % widgets_attributes.color)
+            border: 1px solid {self.maurice_widgets_style.COLOR_GOLD_YELLOW};}}
+        '''
+
+        self.setStyleSheet(style)
 
     def set_yellow_background(self) -> None:
         """Sets yellow background."""
-        self.setStyleSheet(widgets_styles.push_button_style() + 'QPushButton {background-color: #d7801a;}')
+        style = f'QPushButton {{background-color: {self.maurice_widgets_style.COLOR_GOLD_YELLOW};}}'
 
-    def setCheckable(self, checkable):
-        """Sets checkable."""
-        if checkable:
-            self.setStyleSheet(widgets_styles.check_button_style())
-
-        super(QPushButton, self).setCheckable(checkable)
+        self.setStyleSheet(self.maurice_widgets_style.push_button() + style)
 
     def setToolTip(self, lmb: str, alt_lmb: str = '', ctrl_lmb: str = '', title: str = ''):
         """Sets tool tip."""

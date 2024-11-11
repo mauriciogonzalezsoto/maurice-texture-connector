@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: dialog.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-10-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -21,8 +21,7 @@ except ImportError:
 import logging
 import os
 
-import maurice_texture_connector.ui.maurice_qt.widgets_attributes as widgets_attributes
-import maurice_texture_connector.ui.maurice_qt.widgets_styles as widgets_styles
+from maurice_texture_connector.ui.maurice_qt.maurice_widgets_styles import MauriceWidgetsStyle
 import maurice_texture_connector.utils as maurice_utils
 
 
@@ -66,6 +65,8 @@ class QDialog(QtWidgets.QDialog):
     def __init__(self, parent: QtWidgets.QWidget = None):
         """Initializes class attributes"""
         super(QDialog, self).__init__(parent)
+
+        self.maurice_widgets_style = MauriceWidgetsStyle()
 
         # Files path class variables.
         self.icons = maurice_utils.get_icons()
@@ -121,8 +122,8 @@ class QDialog(QtWidgets.QDialog):
         """Creates the menu bar."""
         # Main QMenuBar.
         main_menu_bar = QtWidgets.QMenuBar()
-        main_menu_bar.setFixedHeight(widgets_attributes.menu_bar_height)
-        main_menu_bar.setStyleSheet(widgets_styles.menu_bar_style())
+        main_menu_bar.setFixedHeight(maurice_utils.get_value_by_ppi(24, 32))
+        main_menu_bar.setStyleSheet(self.maurice_widgets_style.menu_bar())
         self.main_layout.setMenuBar(main_menu_bar)
 
         # Main menu.
@@ -160,15 +161,15 @@ class QDialog(QtWidgets.QDialog):
 
         # Right QMenuBar.
         right_menu_bar = QtWidgets.QMenuBar(main_menu_bar)
-        right_menu_bar.setStyleSheet('QMenuBar {padding: 0px 0px 0px %dpx;}' % (maurice_utils.get_value_by_ppi(3, 5)))
+        right_menu_bar.setStyleSheet(f'QMenuBar {{padding: 0px 0px 0px {maurice_utils.get_value_by_ppi(3, 5)}px;}}')
         main_menu_bar.setCornerWidget(right_menu_bar, corner=QtCore.Qt.Corner.TopRightCorner)
 
         if self.COLLAPSE_BUTTON:
-            collapse_action = right_menu_bar.addAction('Collapse', self.collapse_frame_layouts)
+            collapse_action = right_menu_bar.addAction('Collapse', self.collapse_collapsable_widgets)
             collapse_action.setIcon(QtGui.QIcon(self.icons['angle-up.png']))
 
         if self.EXPAND_BUTTON:
-            expand_action = right_menu_bar.addAction('Expand', self.expand_frame_layouts)
+            expand_action = right_menu_bar.addAction('Expand', self.expand_collapsable_widgets)
             expand_action.setIcon(QtGui.QIcon(self.icons['angle-down.png']))
 
     def create_shortcuts(self) -> None:
@@ -229,13 +230,13 @@ class QDialog(QtWidgets.QDialog):
         """Shows the QAbout."""
         logger.info('Override this method: show_about.')
 
-    def collapse_frame_layouts(self) -> None:
-        """Collapses the QFrameLayouts of the UI."""
-        logger.info('Override this method: collapse_frame_layouts.')
+    def collapse_collapsable_widgets(self) -> None:
+        """Collapses collapsable widgets."""
+        logger.info('Override this method: collapse_collapsable_widgets.')
 
-    def expand_frame_layouts(self) -> None:
-        """Expands the QFrameLayouts of the UI."""
-        logger.info('Override this method: expand_frame_layouts.')
+    def expand_collapsable_widgets(self) -> None:
+        """Expands collapsable widgets."""
+        logger.info('Override this method: expand_collapsable_widgets.')
 
     def load_settings(self) -> None:
         """Loads the settings."""

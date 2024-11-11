@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: h_box_layout.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-10-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -12,7 +12,7 @@ try:
 except ImportError:
     from PySide2 import QtWidgets
 
-import maurice_texture_connector.ui.maurice_qt.widgets_attributes as widgets_attributes
+from maurice_texture_connector.ui.maurice_qt.maurice_widgets_styles import MauriceWidgetsStyle
 
 
 class QHBoxLayout(QtWidgets.QHBoxLayout):
@@ -22,6 +22,8 @@ class QHBoxLayout(QtWidgets.QHBoxLayout):
         """Initializes class attributes."""
         super(QHBoxLayout, self).__init__(*args)
 
+        maurice_widgets_style = MauriceWidgetsStyle()
+
         # QHBoxLayout settings.
         self.setContentsMargins(0, 0, 0, 0)
-        self.setSpacing(widgets_attributes.spacing)
+        self.setSpacing(maurice_widgets_style.SPACING)

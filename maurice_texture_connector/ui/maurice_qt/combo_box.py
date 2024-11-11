@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: combo_box.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-10-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -16,8 +16,7 @@ except ImportError:
     from PySide2 import QtCore
     from PySide2 import QtGui
 
-import maurice_texture_connector.ui.maurice_qt.widgets_attributes as widgets_attributes
-import maurice_texture_connector.ui.maurice_qt.widgets_styles as widgets_styles
+from maurice_texture_connector.ui.maurice_qt.maurice_widgets_styles import MauriceWidgetsStyle
 
 
 class QComboBox(QtWidgets.QComboBox):
@@ -27,16 +26,18 @@ class QComboBox(QtWidgets.QComboBox):
         """Initializes class attributes."""
         super(QComboBox, self).__init__()
 
+        maurice_widgets_style = MauriceWidgetsStyle()
+
         # QComboBox class variables.
         self.last_text = ''
         self.wheel_event = True
 
         # QComboBox settings.
         if fixed_size:
-            self.setFixedWidth(widgets_attributes.width)
+            self.setFixedWidth(maurice_widgets_style.WIDTH)
 
-        self.setFixedHeight(widgets_attributes.height)
-        self.setStyleSheet(widgets_styles.combo_box_style())
+        self.setFixedHeight(maurice_widgets_style.HEIGHT)
+        self.setStyleSheet(maurice_widgets_style.combo_box())
 
         # QStandardItemModel.
         self.standard_item_model = QtGui.QStandardItemModel()
@@ -46,7 +47,7 @@ class QComboBox(QtWidgets.QComboBox):
     def add_separator(self) -> None:
         """Adds a separator."""
         separator_standard_item = QtGui.QStandardItem()
-        separator_standard_item.setData('mgSeparator', QtCore.Qt.UserRole)
+        separator_standard_item.setData('mauriceSeparator', QtCore.Qt.UserRole)
         separator_standard_item.setEnabled(False)
         separator_standard_item.setSizeHint(QtCore.QSize(0, 10))
         self.standard_item_model.appendRow(separator_standard_item)
@@ -84,7 +85,7 @@ class QSeparatorStyledItemDelegate(QtWidgets.QStyledItemDelegate):
 
     def paint(self, painter, option, index):
         """Paint."""
-        if index.data(QtCore.Qt.UserRole) == 'mgSeparator':
+        if index.data(QtCore.Qt.UserRole) == 'mauriceSeparator':
             pen = QtGui.QPen(QtGui.QColor(255, 255, 255))
             pen.setWidth(1)
             painter.setPen(pen)

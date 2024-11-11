@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: texture_connector_ui.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-09-2024
+Updated Date: 11-10-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -49,8 +49,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
     IMAGE_EXTENSIONS_SUPPORTED = ['exr', 'gif', 'hdr', 'jpg', 'jpeg', 'png', 'tif', 'tiff']
 
-    PUSH_BUTTON_SIZE = maurice_qt.widgets_attributes.height * 1.5
-    PUSH_BUTTON_ICON_SIZE = maurice_qt.widgets_attributes.push_button_icon_size[0] * 1.5
+    PUSH_BUTTON_SCALING_FACTOR = 1.5
 
     @classmethod
     def show_window(cls) -> None:
@@ -62,6 +61,8 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
     def __init__(self):
         """Initializes class attributes."""
+        self.maurice_widgets_style = maurice_qt.MauriceWidgetsStyle()
+
         self.main_widget = None
 
         # Actions class variables.
@@ -89,7 +90,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.create_material_network_push_button = None
         self.texture_connector_scroll_area = None
         self.settings_widget = None
-        self.material_frame_layout = None
+        self.material_collapsable_widget = None
         self.base_color_check_box = None
         self.roughness_check_box = None
         self.metalness_check_box = None
@@ -97,9 +98,9 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.height_check_box = None
         self.emissive_check_box = None
         self.opacity_check_box = None
-        self.triplanar_frame_layout = None
+        self.triplanar_collapsable_widget = None
         self.use_triplanar_check_box = None
-        self.settings_frame_layout = None
+        self.settings_collapsable_widget = None
         self.use_texture_name_check_box = None
         self.case_sensitivity_check_box = None
         
@@ -159,6 +160,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.maya_project_warning_status_pixmap = None
         self.maya_project_status_label = None
         self.maya_project_path_label = None
+        self.update_ui_push_button = None
 
         # Texture connector.
         self.edit_material_network_arnold = None
@@ -172,7 +174,6 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         # QDialog settings.
         self.setMinimumHeight(self.WINDOW_HEIGHT)
         self.setMinimumWidth(self.WINDOW_WIDTH)
-        self.setWindowIcon(QtGui.QIcon(self.icons['texture-connector.png']))
         self.set_window_title()
 
         # Main layout.
@@ -210,7 +211,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
         # Show emissive images QAction.
         self.show_emissive_images_action = maurice_qt.QAction('Emissive')
-        self.show_emissive_images_action.setIcon(QtGui.QIcon(self.icons['square-o.png']))
+        self.show_emissive_images_action.setIcon(QtGui.QIcon(self.icons['square-e.png']))
 
         # Show opacity images QAction.
         self.show_opacity_images_action = maurice_qt.QAction('Opacity')
@@ -239,48 +240,48 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         # Show settings QPushButton.
         self.show_settings_push_button = maurice_qt.QPushButton()
         self.show_settings_push_button.setFixedSize(
-            TextureConnectorUI.PUSH_BUTTON_SIZE,
-            TextureConnectorUI.PUSH_BUTTON_SIZE)
+            self.maurice_widgets_style.HEIGHT * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR,
+            self.maurice_widgets_style.HEIGHT * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR)
         self.show_settings_push_button.setIcon(QtGui.QIcon(self.icons['settings-yellow.png']))
         self.show_settings_push_button.setIconSize(QtCore.QSize(
-            TextureConnectorUI.PUSH_BUTTON_ICON_SIZE,
-            TextureConnectorUI.PUSH_BUTTON_ICON_SIZE))
+            self.show_settings_push_button.ICON_SIZE * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR,
+            self.show_settings_push_button.ICON_SIZE * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR))
         self.show_settings_push_button.setToolTip(lmb='Settings')
         self.show_settings_push_button.set_transparent_background()
 
         # Show explorer QPushButton.
         self.show_explorer_push_button = maurice_qt.QPushButton()
         self.show_explorer_push_button.setFixedSize(
-            TextureConnectorUI.PUSH_BUTTON_SIZE,
-            TextureConnectorUI.PUSH_BUTTON_SIZE)
+            self.maurice_widgets_style.HEIGHT * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR,
+            self.maurice_widgets_style.HEIGHT * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR)
         self.show_explorer_push_button.setIcon(QtGui.QIcon(self.icons['ballot.png']))
         self.show_explorer_push_button.setIconSize(QtCore.QSize(
-            TextureConnectorUI.PUSH_BUTTON_ICON_SIZE,
-            TextureConnectorUI.PUSH_BUTTON_ICON_SIZE))
+            self.show_explorer_push_button.ICON_SIZE * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR,
+            self.show_explorer_push_button.ICON_SIZE * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR))
         self.show_explorer_push_button.setToolTip(lmb='Explorer')
         self.show_explorer_push_button.set_transparent_background()
 
         # Show files QPushButton.
         self.show_files_push_button = maurice_qt.QPushButton()
         self.show_files_push_button.setFixedSize(
-            TextureConnectorUI.PUSH_BUTTON_SIZE,
-            TextureConnectorUI.PUSH_BUTTON_SIZE)
+            self.maurice_widgets_style.HEIGHT * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR,
+            self.maurice_widgets_style.HEIGHT * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR)
         self.show_files_push_button.setIcon(QtGui.QIcon(self.icons['folder-tree.png']))
         self.show_files_push_button.setIconSize(QtCore.QSize(
-            TextureConnectorUI.PUSH_BUTTON_ICON_SIZE,
-            TextureConnectorUI.PUSH_BUTTON_ICON_SIZE))
+            self.show_files_push_button.ICON_SIZE * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR,
+            self.show_files_push_button.ICON_SIZE * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR))
         self.show_files_push_button.setToolTip(lmb='Files')
         self.show_files_push_button.set_transparent_background()
-        
+
         # Show hypershade QPushButton.
         self.show_hypershade_push_button = maurice_qt.QPushButton()
         self.show_hypershade_push_button.setFixedSize(
-            TextureConnectorUI.PUSH_BUTTON_SIZE,
-            TextureConnectorUI.PUSH_BUTTON_SIZE)
+            self.maurice_widgets_style.HEIGHT * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR,
+            self.maurice_widgets_style.HEIGHT * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR)
         self.show_hypershade_push_button.setIcon(QtGui.QIcon(self.icons['browser.png']))
         self.show_hypershade_push_button.setIconSize(QtCore.QSize(
-            TextureConnectorUI.PUSH_BUTTON_ICON_SIZE,
-            TextureConnectorUI.PUSH_BUTTON_ICON_SIZE))
+            self.show_hypershade_push_button.ICON_SIZE * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR,
+            self.show_hypershade_push_button.ICON_SIZE * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR))
         self.show_hypershade_push_button.setToolTip(lmb='Hypershade')
         self.show_hypershade_push_button.set_transparent_background()
 
@@ -316,7 +317,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
         # Use texture base QCheckBox.
         self.use_texture_name_check_box = maurice_qt.QCheckBox('Use Texture Name')
-        
+
         # Case sensitivity QCheckBox.
         self.case_sensitivity_check_box = maurice_qt.QCheckBox('Case Sensitivity')
 
@@ -388,12 +389,8 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.file_explorer_filter_line_edit.setPlaceholderText('Search...')
 
         # File explorer QTreeWidget.
-        self.file_explorer_tree_widget = QtWidgets.QTreeWidget()
-        self.file_explorer_tree_widget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.file_explorer_tree_widget.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.file_explorer_tree_widget.setHeaderHidden(True)
+        self.file_explorer_tree_widget = maurice_qt.QTreeWidget()
         self.file_explorer_tree_widget.setMinimumHeight(maurice_utils.get_value_by_ppi(100, 150))
-        self.file_explorer_tree_widget.setStyleSheet(maurice_qt.tree_widget_style())
 
         # ==============================================================================================================
         # Files.
@@ -402,12 +399,8 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.files_filter_line_edit.setPlaceholderText('Search...')
 
         # Files QTreeWidget.
-        self.files_tree_widget = QtWidgets.QTreeWidget()
-        self.files_tree_widget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.files_tree_widget.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.files_tree_widget.setHeaderHidden(True)
+        self.files_tree_widget = maurice_qt.QTreeWidget()
         self.files_tree_widget.setMinimumHeight(maurice_utils.get_value_by_ppi(100, 150))
-        self.files_tree_widget.setStyleSheet(maurice_qt.tree_widget_style())
 
         # ==============================================================================================================
         # Status bar.
@@ -444,6 +437,18 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
         # Maya project path QLabel.
         self.maya_project_path_label = maurice_qt.QLabel()
+
+        # Update UI QPushButton.
+        self.update_ui_push_button = maurice_qt.QPushButton()
+        self.update_ui_push_button.setIcon(QtGui.QIcon(self.icons['refresh.png']))
+        self.update_ui_push_button.setIconSize(QtCore.QSize(
+            self.update_ui_push_button.ICON_SIZE * 0.75,
+            self.update_ui_push_button.ICON_SIZE * 0.75))
+        self.update_ui_push_button.setFixedSize(QtCore.QSize(
+            self.maurice_widgets_style.HEIGHT * 0.75,
+            self.maurice_widgets_style.HEIGHT * 0.75))
+        self.update_ui_push_button.setToolTip(lmb='Update Interface.')
+        self.update_ui_push_button.set_transparent_background()
 
     def create_layouts(self) -> None:
         """Creates the layouts."""
@@ -503,14 +508,14 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         settings_v_box_layout = maurice_qt.QVBoxLayout()
         self.settings_widget.setLayout(settings_v_box_layout)
 
-        # Material QFrameLayout.
-        self.material_frame_layout = maurice_qt.QFrameLayout(title='Material', parent=self.settings_widget)
-        self.material_frame_layout.set_height(maurice_utils.get_value_by_ppi(109, 167))
-        settings_v_box_layout.addWidget(self.material_frame_layout)
+        # Material QCollapsableWidget.
+        self.material_collapsable_widget = maurice_qt.QCollapsableWidget(title='Material', parent=self.settings_widget)
+        self.material_collapsable_widget.set_height(maurice_utils.get_value_by_ppi(109, 167))
+        settings_v_box_layout.addWidget(self.material_collapsable_widget)
 
         # Material QGroupBox.
         material_group_box = maurice_qt.QGroupBox()
-        self.material_frame_layout.add_widget(material_group_box)
+        self.material_collapsable_widget.add_widget(material_group_box)
 
         # Material QFormLayout.
         material_form_layout = maurice_qt.QFormLayout()
@@ -524,15 +529,17 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         material_form_layout.setContentsMargins(maurice_utils.get_value_by_ppi(88, 112), 0, 0, 0)
         material_group_box.setLayout(material_form_layout)
 
-        # Triplanar QFrameLayout.
-        self.triplanar_frame_layout = maurice_qt.QFrameLayout(title='Triplanar', parent=self.settings_widget)
-        self.triplanar_frame_layout.set_height(maurice_utils.get_value_by_ppi(19, 30))
-        settings_v_box_layout.addWidget(self.triplanar_frame_layout)
-        
+        # Triplanar QCollapsableWidget.
+        self.triplanar_collapsable_widget = maurice_qt.QCollapsableWidget(
+            title='Triplanar',
+            parent=self.settings_widget)
+        self.triplanar_collapsable_widget.set_height(maurice_utils.get_value_by_ppi(19, 30))
+        settings_v_box_layout.addWidget(self.triplanar_collapsable_widget)
+
         # Triplanar QGroupBox.
         triplanar_group_box = maurice_qt.QGroupBox()
         triplanar_group_box.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum)
-        self.triplanar_frame_layout.add_widget(triplanar_group_box)
+        self.triplanar_collapsable_widget.add_widget(triplanar_group_box)
 
         # Triplanar QFormLayout.
         triplanar_form_layout = maurice_qt.QFormLayout()
@@ -540,15 +547,15 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         triplanar_form_layout.setContentsMargins(maurice_utils.get_value_by_ppi(88, 112), 0, 0, 0)
         triplanar_group_box.setLayout(triplanar_form_layout)
 
-        # Settings QFrameLayout.
-        self.settings_frame_layout = maurice_qt.QFrameLayout(title='Settings', parent=self.settings_widget)
-        self.settings_frame_layout.set_height(maurice_utils.get_value_by_ppi(19, 30))
-        settings_v_box_layout.addWidget(self.settings_frame_layout)
+        # Settings QCollapsableWidget.
+        self.settings_collapsable_widget = maurice_qt.QCollapsableWidget(title='Settings', parent=self.settings_widget)
+        self.settings_collapsable_widget.set_height(maurice_utils.get_value_by_ppi(19, 30))
+        settings_v_box_layout.addWidget(self.settings_collapsable_widget)
 
         # Settings QGroupBox.
         settings_group_box = maurice_qt.QGroupBox()
         settings_group_box.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum)
-        self.settings_frame_layout.add_widget(settings_group_box)
+        self.settings_collapsable_widget.add_widget(settings_group_box)
 
         # Settings QFormLayout.
         settings_form_layout = maurice_qt.QFormLayout()
@@ -624,14 +631,12 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
         # Texture connector QGroupBox.
         texture_connector_group_box = QtWidgets.QGroupBox()
-        texture_connector_group_box.setStyleSheet('''
-            QGroupBox {
+        texture_connector_group_box.setStyleSheet(f'''
+            QGroupBox {{
                 background-color: rgb(35, 35, 35); 
-                border-radius: %dpx;
-                padding: %dpx;}
-                ''' % (
-            maurice_qt.widgets_attributes.border_radius,
-            maurice_utils.get_value_by_ppi(4, 6)))
+                border-radius: {self.maurice_widgets_style.BORDER_RADIUS}px;
+                padding: {maurice_utils.get_value_by_ppi(4, 6)}px;}}
+            ''')
         texture_connector_main_v_box_layout.addWidget(texture_connector_group_box)
 
         # Texture connector QVBoxLayout.
@@ -677,6 +682,8 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         status_bar_h_box_layout = maurice_qt.QHBoxLayout()
         status_bar_h_box_layout.addWidget(self.maya_project_status_label)
         status_bar_h_box_layout.addWidget(self.maya_project_path_label)
+        status_bar_h_box_layout.addStretch()
+        status_bar_h_box_layout.addWidget(self.update_ui_push_button)
         status_bar_h_box_layout.setContentsMargins(maurice_utils.get_value_by_ppi(4, 6), 0, 0, 0)
         status_bar_widget.setLayout(status_bar_h_box_layout)
 
@@ -749,6 +756,11 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.height_widget.edit_texture_clicked.connect(self.height_edit_texture_clicked_widget)
         self.emissive_widget.edit_texture_clicked.connect(self.emissive_edit_texture_clicked_widget)
         self.opacity_widget.edit_texture_clicked.connect(self.opacity_edit_texture_clicked_widget)
+
+        # ==============================================================================================================
+        # Status bar.
+        # ==============================================================================================================
+        self.update_ui_push_button.clicked.connect(self.update_ui_clicked_push_button)
 
     def save_settings(self) -> None:
         """Saves the settings."""
@@ -823,11 +835,11 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
             tool_version=maurice.VERSION)
         about_ui.exec_()
 
-    def collapse_frame_layouts(self) -> None:
-        """Collapses the QFrameLayouts of the UI."""
-        self.material_frame_layout.collapse()
-        self.triplanar_frame_layout.collapse()
-        self.settings_frame_layout.collapse()
+    def collapse_collapsable_widgets(self) -> None:
+        """Collapses collapsable widgets."""
+        self.material_collapsable_widget.collapse()
+        self.triplanar_collapsable_widget.collapse()
+        self.settings_collapsable_widget.collapse()
 
         self.base_color_widget.collapse()
         self.roughness_widget.collapse()
@@ -837,11 +849,11 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.emissive_widget.collapse()
         self.opacity_widget.collapse()
 
-    def expand_frame_layouts(self) -> None:
-        """Expands the QFrameLayouts of the UI."""
-        self.material_frame_layout.expand()
-        self.triplanar_frame_layout.expand()
-        self.settings_frame_layout.expand()
+    def expand_collapsable_widgets(self) -> None:
+        """Expands collapsable widgets."""
+        self.material_collapsable_widget.expand()
+        self.triplanar_collapsable_widget.expand()
+        self.settings_collapsable_widget.expand()
 
         self.base_color_widget.expand()
         self.roughness_widget.expand()
@@ -1011,7 +1023,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.disable_filter_explorer_filters()
         self.reset_file_explorer_actions_icons()
 
-        self.show_emissive_images_action.setIcon(QtGui.QIcon(self.icons['square-o-yellow.png']))
+        self.show_emissive_images_action.setIcon(QtGui.QIcon(self.icons['square-e-yellow.png']))
         self.emissive_suffix = self.emissive_widget.get_texture_suffix()
         self.show_emissive_items = True
 
@@ -1169,7 +1181,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
             file_info = QtCore.QFileInfo(item_data)
 
             context_menu = QtWidgets.QMenu()
-            context_menu.setStyleSheet(maurice_qt.menu_bar_style())
+            context_menu.setStyleSheet(self.maurice_widgets_style.menu_bar())
 
             if self.file_explorer_tree_widget.itemAt(pos):
                 context_menu.addAction(self.show_all_images_action)
@@ -1205,7 +1217,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
         if item:
             context_menu = QtWidgets.QMenu()
-            context_menu.setStyleSheet(maurice_qt.menu_bar_style())
+            context_menu.setStyleSheet(self.maurice_widgets_style.menu_bar())
 
             context_menu.addAction(self.repath_files_action)
             context_menu.addSeparator()
@@ -1384,6 +1396,15 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
                 self.edit_material_network_v_ray.edit_opacity_file_texture_node(image_path)
 
             self.opacity_widget.set_texture_path(image_path)
+
+    def update_ui_clicked_push_button(self) -> None:
+        """Executes the signal 'clicked' of the 'update UI' QPushButton."""
+        self.update_files_items()
+        self.update_images_items()
+        self.update_materials_items()
+        self.update_watched_paths()
+
+        om.MGlobal.displayInfo(f'[{maurice.TEXTURE_CONNECTOR}] Interface updated.')
 
     def add_image_file_child_item(self, dir_path: str, file_name: str, parent_item: any) -> None:
         """Adds image file children item."""
@@ -1741,7 +1762,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.show_metalness_images_action.setIcon(QtGui.QIcon(self.icons['square-m.png']))
         self.show_normal_images_action.setIcon(QtGui.QIcon(self.icons['square-n.png']))
         self.show_height_images_action.setIcon(QtGui.QIcon(self.icons['square-h.png']))
-        self.show_emissive_images_action.setIcon(QtGui.QIcon(self.icons['square-o.png']))
+        self.show_emissive_images_action.setIcon(QtGui.QIcon(self.icons['square-e.png']))
         self.show_opacity_images_action.setIcon(QtGui.QIcon(self.icons['square-o.png']))
 
     def select_material_item(self, material_name: str) -> None:

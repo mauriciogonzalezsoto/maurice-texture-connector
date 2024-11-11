@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: label.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-10-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -14,7 +14,7 @@ except ImportError:
     from PySide2 import QtWidgets
     from PySide2 import QtCore
 
-import maurice_texture_connector.ui.maurice_qt.widgets_styles as widgets_styles
+from maurice_texture_connector.ui.maurice_qt.maurice_widgets_styles import MauriceWidgetsStyle
 
 
 class QLabel(QtWidgets.QLabel):
@@ -24,6 +24,8 @@ class QLabel(QtWidgets.QLabel):
         """Initializes class attributes."""
         super(QLabel, self).__init__(*args)
 
+        maurice_widgets_style = MauriceWidgetsStyle()
+
         # QLabel settings.
         self.setAlignment(QtCore.Qt.AlignVCenter)
-        self.setStyleSheet(widgets_styles.label_style())
+        self.setStyleSheet(maurice_widgets_style.label())

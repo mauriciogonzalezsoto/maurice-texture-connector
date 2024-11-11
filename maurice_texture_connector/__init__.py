@@ -11,7 +11,7 @@ from maurice_texture_connector.utils import get_ppi
 
 
 AUTHOR = 'Mauricio Gonzalez Soto'
-VERSION = '1.1.0'
+VERSION = '1.1.1'
 PPI = get_ppi()
 
 TEXTURE_CONNECTOR_WINDOW_NAME = 'mauriceTextureConnector'

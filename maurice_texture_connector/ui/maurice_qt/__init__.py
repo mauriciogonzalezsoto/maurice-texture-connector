@@ -2,11 +2,14 @@
 ========================================================================================================================
 Name: __init__.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-10-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
 """
+# maurice_widgets_styles.py
+from maurice_texture_connector.ui.maurice_qt.maurice_widgets_styles import MauriceWidgetsStyle
+
 # about.py
 from maurice_texture_connector.ui.maurice_qt.about import QAbout
 
@@ -15,6 +18,9 @@ from maurice_texture_connector.ui.maurice_qt.action import QAction
 
 # check_box.py
 from maurice_texture_connector.ui.maurice_qt.check_box import QCheckBox
+
+# collapsable_widget.py
+from maurice_texture_connector.ui.maurice_qt.collapsable_widget import QCollapsableWidget
 
 # combo_box.py
 from maurice_texture_connector.ui.maurice_qt.combo_box import QComboBox
@@ -33,9 +39,6 @@ from maurice_texture_connector.ui.maurice_qt.double_spin_box import QDoubleSpinB
 
 # form_layout.py
 from maurice_texture_connector.ui.maurice_qt.form_layout import QFormLayout
-
-# frame_layout.py
-from maurice_texture_connector.ui.maurice_qt.frame_layout import QFrameLayout
 
 # group_box.py
 from maurice_texture_connector.ui.maurice_qt.group_box import QGroupBox
@@ -73,28 +76,8 @@ from maurice_texture_connector.ui.maurice_qt.spin_box import QSpinBox
 # splitter.py
 from maurice_texture_connector.ui.maurice_qt.splitter import QSplitter
 
+# tree_widget.py
+from maurice_texture_connector.ui.maurice_qt.tree_widget import QTreeWidget
+
 # v_box_layout.py
 from maurice_texture_connector.ui.maurice_qt.v_box_layout import QVBoxLayout
-
-# widgets_attributes.py
-import maurice_texture_connector.ui.maurice_qt.widgets_attributes as widgets_attributes
-
-# widgets_styles.py
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import combo_box_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import check_box_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import check_button_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import double_spin_box_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import group_box_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import label_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import line_edit_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import list_widget_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import menu_bar_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import progress_bar_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import push_button_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import radio_button_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import scroll_area_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import spin_box_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import splitter_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import tab_widget_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import tree_widget_style
-from maurice_texture_connector.ui.maurice_qt.widgets_styles import widget_style
