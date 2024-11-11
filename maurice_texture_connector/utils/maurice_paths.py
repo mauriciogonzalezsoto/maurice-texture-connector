@@ -2,11 +2,12 @@
 ========================================================================================================================
 Name: maurice_paths.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
 """
+from maya.cmds import internalVar
 from pathlib import Path
 from glob import glob
 import os
@@ -14,7 +15,8 @@ import os
 
 def get_data_folder_path() -> str:
     """Gets the data folder path."""
-    data_folder_path = os.path.join(get_root_path(), 'data')
+    user_pref_dir = internalVar(userPrefDir=True)
+    data_folder_path = os.path.join(user_pref_dir, 'mauriceTextureConnector')
 
     return data_folder_path
 
@@ -60,7 +62,7 @@ def get_images_folder_path() -> str:
 
 def get_root_path() -> str:
     """Gets the root path."""
-    root_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     return root_path
 
