@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: about.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -64,7 +64,6 @@ class QAbout(QDialog):
         self.setFixedWidth(self.WINDOW_WIDTH)
         self.setMaximumHeight(self.WINDOW_HEIGHT)
         self.setModal(True)
-        self.setWindowIcon(QtGui.QIcon(self.icons['info-black.png']))
 
     def create_widgets(self) -> None:
         """Creates the widgets."""

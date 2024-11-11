@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: texture_connector_ui.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-10-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -187,7 +187,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         # ==============================================================================================================
         # Show all images QAction.
         self.show_all_images_action = maurice_qt.QAction('All')
-        self.show_all_images_action.setIcon(QtGui.QIcon(self.icons['square-a-yellow.png']))
+        self.show_all_images_action.setIcon(QtGui.QIcon(self.icons['square-a-color.png']))
 
         # Show base color images QAction.
         self.show_base_color_images_action = maurice_qt.QAction('Base Color')
@@ -242,7 +242,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.show_settings_push_button.setFixedSize(
             self.maurice_widgets_style.HEIGHT * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR,
             self.maurice_widgets_style.HEIGHT * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR)
-        self.show_settings_push_button.setIcon(QtGui.QIcon(self.icons['settings-yellow.png']))
+        self.show_settings_push_button.setIcon(QtGui.QIcon(self.icons['settings.png']))
         self.show_settings_push_button.setIconSize(QtCore.QSize(
             self.show_settings_push_button.ICON_SIZE * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR,
             self.show_settings_push_button.ICON_SIZE * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR))
@@ -254,7 +254,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.show_explorer_push_button.setFixedSize(
             self.maurice_widgets_style.HEIGHT * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR,
             self.maurice_widgets_style.HEIGHT * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR)
-        self.show_explorer_push_button.setIcon(QtGui.QIcon(self.icons['ballot.png']))
+        self.show_explorer_push_button.setIcon(QtGui.QIcon(self.icons['ballot-disabled.png']))
         self.show_explorer_push_button.setIconSize(QtCore.QSize(
             self.show_explorer_push_button.ICON_SIZE * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR,
             self.show_explorer_push_button.ICON_SIZE * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR))
@@ -266,7 +266,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.show_files_push_button.setFixedSize(
             self.maurice_widgets_style.HEIGHT * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR,
             self.maurice_widgets_style.HEIGHT * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR)
-        self.show_files_push_button.setIcon(QtGui.QIcon(self.icons['folder-tree.png']))
+        self.show_files_push_button.setIcon(QtGui.QIcon(self.icons['folder-tree-disabled.png']))
         self.show_files_push_button.setIconSize(QtCore.QSize(
             self.show_files_push_button.ICON_SIZE * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR,
             self.show_files_push_button.ICON_SIZE * TextureConnectorUI.PUSH_BUTTON_SCALING_FACTOR))
@@ -325,7 +325,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.create_material_network_push_button = maurice_qt.QPushButton('Create Material Network')
         self.create_material_network_push_button.setIcon(QtGui.QIcon(self.icons['chart-tree.png']))
         self.create_material_network_push_button.setToolTip(lmb='Create Material Network')
-        self.create_material_network_push_button.set_yellow_background()
+        self.create_material_network_push_button.set_color_background()
 
         # ==============================================================================================================
         # Texture connector.
@@ -406,7 +406,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         # Status bar.
         # ==============================================================================================================
         # Maya project check status QImage.
-        maya_project_check_status_image = QtGui.QImage(self.icons['check-1.png'])
+        maya_project_check_status_image = QtGui.QImage(self.icons['check.png'])
         maya_project_check_status_image = maya_project_check_status_image.scaled(
             maurice_utils.get_value_by_ppi(14, 21),
             maurice_utils.get_value_by_ppi(14, 21),
@@ -961,14 +961,14 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.reset_file_explorer_actions_icons()
         self.update_images_items()
 
-        self.show_all_images_action.setIcon(QtGui.QIcon(self.icons['square-a-yellow.png']))
+        self.show_all_images_action.setIcon(QtGui.QIcon(self.icons['square-a-color.png']))
 
     def show_base_color_images_triggered_action(self) -> None:
         """Executes the signal 'triggered' of the 'show base color images' action."""
         self.disable_filter_explorer_filters()
         self.reset_file_explorer_actions_icons()
 
-        self.show_base_color_images_action.setIcon(QtGui.QIcon(self.icons['square-d-yellow.png']))
+        self.show_base_color_images_action.setIcon(QtGui.QIcon(self.icons['square-d-color.png']))
         self.base_color_suffix = self.base_color_widget.get_texture_suffix()
         self.show_base_color_items = True
 
@@ -979,7 +979,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.disable_filter_explorer_filters()
         self.reset_file_explorer_actions_icons()
 
-        self.show_roughness_images_action.setIcon(QtGui.QIcon(self.icons['square-r-yellow.png']))
+        self.show_roughness_images_action.setIcon(QtGui.QIcon(self.icons['square-r-color.png']))
         self.show_roughness_items = True
         self.roughness_suffix = self.roughness_widget.get_texture_suffix()
 
@@ -990,7 +990,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.disable_filter_explorer_filters()
         self.reset_file_explorer_actions_icons()
 
-        self.show_metalness_images_action.setIcon(QtGui.QIcon(self.icons['square-m-yellow.png']))
+        self.show_metalness_images_action.setIcon(QtGui.QIcon(self.icons['square-m-color.png']))
         self.metalness_suffix = self.metalness_widget.get_texture_suffix()
         self.show_metalness_items = True
 
@@ -1001,7 +1001,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.disable_filter_explorer_filters()
         self.reset_file_explorer_actions_icons()
 
-        self.show_normal_images_action.setIcon(QtGui.QIcon(self.icons['square-n-yellow.png']))
+        self.show_normal_images_action.setIcon(QtGui.QIcon(self.icons['square-n-color.png']))
         self.normal_suffix = self.normal_widget.get_texture_suffix()
         self.show_normal_items = True
 
@@ -1012,7 +1012,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.disable_filter_explorer_filters()
         self.reset_file_explorer_actions_icons()
 
-        self.show_height_images_action.setIcon(QtGui.QIcon(self.icons['square-h-yellow.png']))
+        self.show_height_images_action.setIcon(QtGui.QIcon(self.icons['square-h-color.png']))
         self.height_suffix = self.height_widget.get_texture_suffix()
         self.show_height_items = True
 
@@ -1023,7 +1023,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.disable_filter_explorer_filters()
         self.reset_file_explorer_actions_icons()
 
-        self.show_emissive_images_action.setIcon(QtGui.QIcon(self.icons['square-e-yellow.png']))
+        self.show_emissive_images_action.setIcon(QtGui.QIcon(self.icons['square-e-color.png']))
         self.emissive_suffix = self.emissive_widget.get_texture_suffix()
         self.show_emissive_items = True
 
@@ -1034,7 +1034,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.disable_filter_explorer_filters()
         self.reset_file_explorer_actions_icons()
         
-        self.show_opacity_images_action.setIcon(QtGui.QIcon(self.icons['square-o-yellow.png']))
+        self.show_opacity_images_action.setIcon(QtGui.QIcon(self.icons['square-o-color.png']))
         self.opacity_suffix = self.opacity_widget.get_texture_suffix()
         self.show_opacity_items = True
 
@@ -1076,21 +1076,21 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         """Executes the signal 'clicked' of the 'show settings' push button."""
         self.hide_activity_widgets()
 
-        self.show_settings_push_button.setIcon(QtGui.QIcon(self.icons['settings-yellow.png']))
+        self.show_settings_push_button.setIcon(QtGui.QIcon(self.icons['settings.png']))
         self.settings_main_widget.setVisible(True)
 
     def show_explorer_clicked_push_button(self) -> None:
         """Executes the signal 'clicked' of the 'show explorer' push button."""
         self.hide_activity_widgets()
 
-        self.show_explorer_push_button.setIcon(QtGui.QIcon(self.icons['ballot-yellow.png']))
+        self.show_explorer_push_button.setIcon(QtGui.QIcon(self.icons['ballot.png']))
         self.explorer_widget.setVisible(True)
 
     def show_files_clicked_push_button(self) -> None:
         """Executes the signal 'clicked' of the 'show files' push button."""
         self.hide_activity_widgets()
 
-        self.show_files_push_button.setIcon(QtGui.QIcon(self.icons['folder-tree-yellow.png']))
+        self.show_files_push_button.setIcon(QtGui.QIcon(self.icons['folder-tree.png']))
         self.files_widget.setVisible(True)
 
     @staticmethod
@@ -1721,9 +1721,9 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
     def hide_activity_widgets(self) -> None:
         """Hides the activity widgets."""
-        self.show_settings_push_button.setIcon(QtGui.QIcon(self.icons['settings.png']))
-        self.show_explorer_push_button.setIcon(QtGui.QIcon(self.icons['ballot.png']))
-        self.show_files_push_button.setIcon(QtGui.QIcon(self.icons['folder-tree.png']))
+        self.show_settings_push_button.setIcon(QtGui.QIcon(self.icons['settings-disabled.png']))
+        self.show_explorer_push_button.setIcon(QtGui.QIcon(self.icons['ballot-disabled.png']))
+        self.show_files_push_button.setIcon(QtGui.QIcon(self.icons['folder-tree-disabled.png']))
 
         self.settings_main_widget.setVisible(False)
         self.explorer_widget.setVisible(False)

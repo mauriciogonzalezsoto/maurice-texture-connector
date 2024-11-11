@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: dialog.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-10-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -220,7 +220,7 @@ class QDialog(QtWidgets.QDialog):
             self.setWindowFlag(QtCore.Qt.WindowStaysOnTopHint, True)
             self.show()
 
-            self.on_top_bottom_action.setIcon(QtGui.QIcon(self.icons['arrow-alt-to-top-yellow.png']))
+            self.on_top_bottom_action.setIcon(QtGui.QIcon(self.icons['arrow-alt-to-top-color.png']))
 
             self.is_on_top = True
 

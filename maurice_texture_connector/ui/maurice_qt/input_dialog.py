@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: input_dialog.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -45,7 +45,6 @@ class QInputDialog(QDialog):
         self.setFixedWidth(self.WINDOW_WIDTH)
         self.setMaximumHeight(self.WINDOW_HEIGHT)
         self.setModal(True)
-        self.setWindowIcon(QtGui.QIcon(self.icons['input-text-black.png']))
         self.setWindowTitle(self.title)
 
     def create_widgets(self) -> None:
@@ -61,13 +60,11 @@ class QInputDialog(QDialog):
 
         # Ok push button.
         self.ok_push_button = QPushButton('OK')
-        self.ok_push_button.setIcon(QtGui.QIcon(self.icons['check.png']))
         self.ok_push_button.setToolTip(lmb='Ok')
-        self.ok_push_button.set_yellow_background()
+        self.ok_push_button.set_color_background()
 
         # Cancel push button.
         self.cancel_push_button = QPushButton('Cancel')
-        self.cancel_push_button.setIcon(QtGui.QIcon(self.icons['x.png']))
         self.cancel_push_button.setToolTip(lmb='Cancel')
 
     def create_layouts(self) -> None:

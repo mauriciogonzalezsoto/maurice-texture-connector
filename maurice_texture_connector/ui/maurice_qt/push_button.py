@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: push_button.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-10-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -57,14 +57,14 @@ class QPushButton(QtWidgets.QPushButton):
             QToolTip {{
             background-color: rgb(45, 45, 45);
             color: white; 
-            border: 1px solid {self.maurice_widgets_style.COLOR_GOLD_YELLOW};}}
+            border: 1px solid {self.maurice_widgets_style.SOFTWARE_COLOR};}}
         '''
 
         self.setStyleSheet(style)
 
-    def set_yellow_background(self) -> None:
-        """Sets yellow background."""
-        style = f'QPushButton {{background-color: {self.maurice_widgets_style.COLOR_GOLD_YELLOW};}}'
+    def set_color_background(self) -> None:
+        """Sets color background."""
+        style = f'QPushButton {{background-color: {self.maurice_widgets_style.SOFTWARE_COLOR};}}'
 
         self.setStyleSheet(self.maurice_widgets_style.push_button() + style)
 

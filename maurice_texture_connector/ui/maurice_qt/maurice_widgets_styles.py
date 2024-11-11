@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: maurice_widgets_styles.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-10-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -14,13 +14,13 @@ class MauriceWidgetsStyle(object):
     """Maurice widgets style."""
     SCALING_FACTOR = maurice_utils.get_value_by_ppi(2, 3)
 
-    COLOR_GOLD_YELLOW = '#d7801a'
+    SOFTWARE_COLOR = '#5285A6'
     BORDER_RADIUS = SCALING_FACTOR * 2
     FONT_SIZE = maurice_utils.get_value_by_ppi(11, 15)
     SPACING = SCALING_FACTOR
     HEIGHT = SCALING_FACTOR * 10
     WIDTH = maurice_utils.get_value_by_ppi(100, 126)
-    
+
     def __init__(self):
         """Initializes class attributes."""
         self.icons = maurice_utils.get_icons()
@@ -82,7 +82,7 @@ class MauriceWidgetsStyle(object):
     
             QComboBox QAbstractItemView {{
                 color: white; 
-                selection-background-color: {MauriceWidgetsStyle.COLOR_GOLD_YELLOW};
+                selection-background-color: {MauriceWidgetsStyle.SOFTWARE_COLOR};
             }}
     
             QComboBox::drop-down {{
@@ -114,7 +114,7 @@ class MauriceWidgetsStyle(object):
                 height: 100px;
             }}
             '''
-    
+
         return style
 
     @staticmethod
@@ -125,7 +125,7 @@ class MauriceWidgetsStyle(object):
                 background-color: rgb(45, 45, 45);
                 border-radius: {MauriceWidgetsStyle.BORDER_RADIUS}px; 
                 color: white;
-                selection-background-color: {MauriceWidgetsStyle.COLOR_GOLD_YELLOW}; 
+                selection-background-color: {MauriceWidgetsStyle.SOFTWARE_COLOR}; 
                 font-size: {MauriceWidgetsStyle.FONT_SIZE}px;
             }}
             
@@ -133,7 +133,7 @@ class MauriceWidgetsStyle(object):
                 color: #808080;
             }}
             '''
-    
+
         return style
 
     @staticmethod
@@ -146,7 +146,7 @@ class MauriceWidgetsStyle(object):
                 padding: {MauriceWidgetsStyle.SCALING_FACTOR}px;
             }}
             '''
-    
+
         return style
 
     @staticmethod
@@ -162,7 +162,7 @@ class MauriceWidgetsStyle(object):
             color: #808080;
         }}
         '''
-    
+
         return style
 
     @staticmethod
@@ -173,7 +173,7 @@ class MauriceWidgetsStyle(object):
                 background-color: rgb(45, 45, 45); 
                 border-radius: {MauriceWidgetsStyle.BORDER_RADIUS}px; 
                 color: white;
-                selection-background-color: {MauriceWidgetsStyle.COLOR_GOLD_YELLOW}; 
+                selection-background-color: {MauriceWidgetsStyle.SOFTWARE_COLOR}; 
                 font-size: {MauriceWidgetsStyle.FONT_SIZE}px; 
                 padding-left: 4px;
             }}
@@ -182,7 +182,7 @@ class MauriceWidgetsStyle(object):
                 color: rgb(128, 128, 128);
             }}
             '''
-    
+
         return style
 
     def list_widget(self) -> str:
@@ -199,8 +199,8 @@ class MauriceWidgetsStyle(object):
             }}
             
             QListWidget::item:selected {{
-                background: {MauriceWidgetsStyle.COLOR_GOLD_YELLOW}; 
-                border: 2px solid {MauriceWidgetsStyle.COLOR_GOLD_YELLOW}; 
+                background: {MauriceWidgetsStyle.SOFTWARE_COLOR}; 
+                border: 2px solid {MauriceWidgetsStyle.SOFTWARE_COLOR}; 
                 border-radius: {MauriceWidgetsStyle.BORDER_RADIUS}px;
                 color: black; 
                 padding-left: -2px; 
@@ -209,7 +209,7 @@ class MauriceWidgetsStyle(object):
             
             {self.scroll_area()}
             '''
-    
+
         return style
 
     def menu_bar(self) -> str:
@@ -228,7 +228,7 @@ class MauriceWidgetsStyle(object):
             }}
             
             QMenuBar::item:selected {{
-                background-color: {MauriceWidgetsStyle.COLOR_GOLD_YELLOW};
+                background-color: {MauriceWidgetsStyle.SOFTWARE_COLOR};
             }}
             
             QMenu {{
@@ -254,7 +254,7 @@ class MauriceWidgetsStyle(object):
             }}
             
             QMenu::item:selected {{
-                background-color: {MauriceWidgetsStyle.COLOR_GOLD_YELLOW};
+                background-color: {MauriceWidgetsStyle.SOFTWARE_COLOR};
             }}
             
             QMenu::icon {{
@@ -277,7 +277,7 @@ class MauriceWidgetsStyle(object):
                 margin-left: auto;
             }}
             '''
-        
+
         return style
 
     @staticmethod
@@ -301,16 +301,16 @@ class MauriceWidgetsStyle(object):
             }}
             
             QPushButton:hover {{
-                border: 2px solid {MauriceWidgetsStyle.COLOR_GOLD_YELLOW};
+                border: 2px solid {MauriceWidgetsStyle.SOFTWARE_COLOR};
             }}
             
             QToolTip {{
                 background-color: rgb(45, 45, 45);
                 color: white; 
-                border: 1px solid {MauriceWidgetsStyle.COLOR_GOLD_YELLOW}; 
+                border: 1px solid {MauriceWidgetsStyle.SOFTWARE_COLOR}; 
             }}
             '''
-    
+
         return style
 
     def radio_button(self) -> str:
@@ -354,7 +354,7 @@ class MauriceWidgetsStyle(object):
                 height: {MauriceWidgetsStyle.SCALING_FACTOR * 6}px;
             }}
             '''
-    
+
         return style
 
     @staticmethod
@@ -393,7 +393,7 @@ class MauriceWidgetsStyle(object):
                 subcontrol-origin: margin;
             }}
             '''
-    
+
         return scroll_area
 
     @staticmethod
@@ -404,7 +404,7 @@ class MauriceWidgetsStyle(object):
                 background-color: rgb(45, 45, 45);
                 border-radius: {MauriceWidgetsStyle.BORDER_RADIUS}px;
                 color: white;
-                selection-background-color: {MauriceWidgetsStyle.COLOR_GOLD_YELLOW}; 
+                selection-background-color: {MauriceWidgetsStyle.SOFTWARE_COLOR}; 
                 font-size: {MauriceWidgetsStyle.FONT_SIZE}px;
             }}
             
@@ -424,7 +424,7 @@ class MauriceWidgetsStyle(object):
                 margin: {maurice_utils.get_value_by_ppi(-2, -4)}px;
             }}
             '''
-        
+
         return style
 
     @staticmethod
@@ -468,7 +468,7 @@ class MauriceWidgetsStyle(object):
                 margin-right: 0;
             }}
             '''
-    
+
         return style
 
     def tree_widget(self) -> str:
@@ -480,8 +480,8 @@ class MauriceWidgetsStyle(object):
             }}
             
             QTreeWidget::item:selected {{
-                background: {MauriceWidgetsStyle.COLOR_GOLD_YELLOW}; 
-                border: 2px solid {MauriceWidgetsStyle.COLOR_GOLD_YELLOW}; 
+                background: {MauriceWidgetsStyle.SOFTWARE_COLOR}; 
+                border: 2px solid {MauriceWidgetsStyle.SOFTWARE_COLOR}; 
                 border-radius: {MauriceWidgetsStyle.BORDER_RADIUS}px;  
                 color: black; 
                 padding-left: -2px; 
@@ -503,7 +503,7 @@ class MauriceWidgetsStyle(object):
             QToolTip {{
                 background-color: rgb(45, 45, 45);
                 color: white; 
-                border: 1px solid {MauriceWidgetsStyle.COLOR_GOLD_YELLOW}; 
+                border: 1px solid {MauriceWidgetsStyle.SOFTWARE_COLOR}; 
             }}
             
             {self.scroll_area()}

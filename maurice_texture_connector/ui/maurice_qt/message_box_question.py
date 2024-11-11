@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: message_box_question.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -52,7 +52,6 @@ class QMessageBoxQuestion(QDialog):
         self.setFixedWidth(self.WINDOW_WIDTH)
         self.setMaximumHeight(self.WINDOW_HEIGHT)
         self.setModal(True)
-        self.setWindowIcon(QtGui.QIcon(self.icons['interrogation-black.png']))
         self.setWindowTitle(self.title)
 
     def create_widgets(self) -> None:
@@ -74,7 +73,7 @@ class QMessageBoxQuestion(QDialog):
         # No QPushButton.
         self.no_push_button = QPushButton('No')
         self.no_push_button.setToolTip(lmb='No')
-        self.no_push_button.set_yellow_background()
+        self.no_push_button.set_color_background()
 
     def create_layouts(self) -> None:
         """Creates the layouts."""
