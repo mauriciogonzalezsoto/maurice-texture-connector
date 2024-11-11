@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: collapsable_widget.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-10-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -31,7 +31,7 @@ class Header(QtWidgets.QWidget):
     clicked = QtCore.Signal()
     toggled = QtCore.Signal()
 
-    def __init__(self, title: str):
+    def __init__(self, title: str) -> None:
         """Initializes class attributes."""
         super(Header, self).__init__()
 
@@ -150,7 +150,7 @@ class Header(QtWidgets.QWidget):
         """Sets the QCollapsableWidget title."""
         self.title_label.setText(f'<b>{title}</b>')
 
-    def mouseReleaseEvent(self, event):
+    def mouseReleaseEvent(self, event: QtGui.QMouseEvent) -> None:
         """Mouse release event."""
         self.clicked.emit()
         self.toggled.emit()
@@ -159,7 +159,7 @@ class Header(QtWidgets.QWidget):
 class QCollapsableWidget(QtWidgets.QWidget):
     """QCollapsableWidget."""
 
-    def __init__(self, title: str, parent: any):
+    def __init__(self, title: str, parent: QtWidgets.QWidget) -> None:
         """Initializes class attributes."""
         super(QCollapsableWidget, self).__init__()
 

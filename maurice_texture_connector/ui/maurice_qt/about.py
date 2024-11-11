@@ -40,7 +40,7 @@ class QAbout(QDialog):
 
     ICON_SIZE = maurice_utils.get_value_by_ppi(20, 30)
 
-    def __init__(self, parent: QtWidgets.QWidget, image_path: str, tool_name: str, tool_version: int):
+    def __init__(self, parent: QtWidgets.QWidget, image_path: str, tool_name: str, tool_version: int) -> None:
         """ Initializes class attributes."""
         # About class variables.
         self.image_path = image_path
@@ -240,7 +240,7 @@ class QAbout(QDialog):
 
     @staticmethod
     def open_art_station_clicked_push_button() -> None:
-        """Executes the signal 'clicked' of the 'open Artstation' push button."""
+        """Executes the signal 'clicked' of the 'open ArtStation' push button."""
         webbrowser.open('https://www.artstation.com/mauriciogonzalezsoto')
 
     @staticmethod

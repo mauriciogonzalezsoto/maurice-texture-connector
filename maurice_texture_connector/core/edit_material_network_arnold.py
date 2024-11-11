@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: edit_material_network_arnold.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-09-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -21,6 +21,6 @@ class EditMaterialNetworkArnold(EditMaterialNetwork):
     OPACITY_MATERIAL_INPUT_NAME = 'opacity'
     ROUGHNESS_MATERIAL_INPUT_NAME = 'specularRoughness'
 
-    def __init__(self, material: str):
+    def __init__(self, material: str) -> None:
         """Initializes class attributes."""
         super(EditMaterialNetworkArnold, self).__init__(material)

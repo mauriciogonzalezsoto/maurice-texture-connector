@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: divider_label.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -18,7 +18,7 @@ import maurice_texture_connector.utils as maurice_utils
 class QDividerLabel(QtWidgets.QLabel):
     """QDividerLabel."""
 
-    def __init__(self, *args):
+    def __init__(self, *args) -> None:
         """Initializes class attributes."""
         super(QDividerLabel, self).__init__(*args)
 

@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: texture_settings_widget.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-10-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -28,7 +28,7 @@ class TextureSettingsWidget(QtWidgets.QWidget):
     """Texture settings widget."""
     edit_texture_clicked = QtCore.Signal()
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initializes class attributes."""
         super(TextureSettingsWidget, self).__init__()
 
@@ -192,8 +192,8 @@ class TextureSettingsWidget(QtWidgets.QWidget):
     def clear_texture_info(self) -> None:
         """Clears the texture info."""
         self.texture_path_label.setText('')
-        self.texture_path_label.setStyleSheet(self.maurice_widgets_style.label() + 'QLabel {color: #ffffff}')
-
+        self.texture_path_label.setStyleSheet(
+            self.maurice_widgets_style.label() + f'QLabel {{color: {self.maurice_widgets_style.WHITE_COLOR}}}')
         self.texture_path_push_button.setVisible(False)
 
         self.texture_color_space_line_edit.setText('')
@@ -214,11 +214,11 @@ class TextureSettingsWidget(QtWidgets.QWidget):
             if os.path.exists(texture_path):
                 if texture_path.startswith(current_maya_project):
                     texture_path = texture_path.removeprefix(current_maya_project)
-                    color = '#ffffff'
+                    color = self.maurice_widgets_style.WHITE_COLOR
                 else:
-                    color = '#ffd600'
+                    color = self.maurice_widgets_style.WARNING_C0LOR
             else:
-                color = '#fa0c08'
+                color = self.maurice_widgets_style.ERROR_COLOR
 
             self.texture_path_label.setStyleSheet(self.maurice_widgets_style.line_edit() + f'QLabel {{color: {color}}}')
             self.texture_path_label.setText(texture_path)

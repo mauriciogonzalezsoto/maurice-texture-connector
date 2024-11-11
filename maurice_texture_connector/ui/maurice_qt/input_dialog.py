@@ -8,8 +8,10 @@ Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
 """
 try:
+    from PySide6 import QtWidgets
     from PySide6 import QtGui
 except ImportError:
+    from PySide2 import QtWidgets
     from PySide2 import QtGui
 
 from maurice_texture_connector.ui.maurice_qt.divider_label import QDividerLabel
@@ -28,7 +30,7 @@ class QInputDialog(QDialog):
 
     MENU_BAR = False
 
-    def __init__(self, title):
+    def __init__(self, parent: QtWidgets.QWidget, title: str) -> None:
         """Initializes class attributes."""
         # QInputDialog class variables.
         self.title = title
@@ -39,7 +41,7 @@ class QInputDialog(QDialog):
         self.ok_push_button = None
         self.cancel_push_button = None
 
-        super(QInputDialog, self).__init__()
+        super(QInputDialog, self).__init__(parent)
 
         # QDialog settings.
         self.setFixedWidth(self.WINDOW_WIDTH)

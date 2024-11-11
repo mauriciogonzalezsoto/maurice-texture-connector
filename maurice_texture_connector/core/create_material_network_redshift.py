@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: create_material_network_redshift.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-09-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -27,7 +27,7 @@ class CreateMaterialNetworkRedshift(CreateMaterialNetwork):
     TRIPLANAR_ALPHA_OUTPUT_NAME = 'outAlpha'
     TRIPLANAR_COLOR_OUTPUT_NAME = 'outColor'
 
-    def __init__(self):
+    def __init__(self) -> None:
         super(CreateMaterialNetworkRedshift, self).__init__()
 
     def create_emissive_network(self) -> None:

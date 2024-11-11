@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: create_network_network_v_ray.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-10-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -32,7 +32,7 @@ class CreateMaterialNetworkVRay(ff.CreateMaterialNetwork):
 
     USE_BUMP_2D_NODE = False
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initializes class attributes."""
         super(CreateMaterialNetworkVRay, self).__init__()
 

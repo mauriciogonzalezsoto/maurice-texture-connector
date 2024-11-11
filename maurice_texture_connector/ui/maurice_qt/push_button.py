@@ -26,7 +26,7 @@ class QPushButton(QtWidgets.QPushButton):
     clicked_and_alt = QtCore.Signal()
     clicked_and_ctrl = QtCore.Signal()
 
-    def __init__(self, *args):
+    def __init__(self, *args) -> None:
         """Initializes class attributes."""
         super(QPushButton, self).__init__(*args)
 
@@ -68,7 +68,7 @@ class QPushButton(QtWidgets.QPushButton):
 
         self.setStyleSheet(self.maurice_widgets_style.push_button() + style)
 
-    def setToolTip(self, lmb: str, alt_lmb: str = '', ctrl_lmb: str = '', title: str = ''):
+    def setToolTip(self, lmb: str, alt_lmb: str = '', ctrl_lmb: str = '', title: str = '') -> None:
         """Sets tool tip."""
         alt_lmb = alt_lmb.capitalize()
         ctrl_lmb = ctrl_lmb.capitalize()

@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: create_material_network.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-10-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -34,7 +34,7 @@ class CreateMaterialNetwork(object):
     TRIPLANAR_ALPHA_OUTPUT_NAME = None
     TRIPLANAR_COLOR_OUTPUT_NAME = None
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initializes class attributes."""
         self.file_digits_suffix = None
         self.file_stem = None

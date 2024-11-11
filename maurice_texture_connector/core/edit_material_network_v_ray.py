@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: edit_network_network_v_ray.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-10-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -21,6 +21,6 @@ class EditMaterialNetworkVRay(EditMaterialNetwork):
     OPACITY_MATERIAL_INPUT_NAME = 'opacityMap'
     ROUGHNESS_MATERIAL_INPUT_NAME = 'reflectionGlossiness'
 
-    def __init__(self, material: str):
+    def __init__(self, material: str) -> None:
         """Initializes class attributes."""
         super(EditMaterialNetworkVRay, self).__init__(material)

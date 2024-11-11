@@ -24,7 +24,7 @@ class EditMaterialNetwork(object):
     OPACITY_MATERIAL_INPUT_NAME = None
     ROUGHNESS_MATERIAL_INPUT_NAME = None
 
-    def __init__(self, material: str):
+    def __init__(self, material: str) -> None:
         """Initializes class attributes."""
         self.material = material
 

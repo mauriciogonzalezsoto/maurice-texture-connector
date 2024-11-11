@@ -62,7 +62,7 @@ class QDialog(QtWidgets.QDialog):
             cls.window_instance.raise_()
             cls.window_instance.activateWindow()
 
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None) -> None:
         """Initializes class attributes"""
         super(QDialog, self).__init__(parent)
 
@@ -268,14 +268,14 @@ class QDialog(QtWidgets.QDialog):
                     child.blockSignals(False)
                 self.unblock_all_signals(child)
 
-    def closeEvent(self, event):
+    def closeEvent(self, event: any) -> None:
         """Close event."""
         if isinstance(self, QDialog):
             super(QDialog, self).closeEvent(event)
 
             self.geometry = self.saveGeometry()
 
-    def showEvent(self, event):
+    def showEvent(self, event: any) -> None:
         """Show event."""
         super(QDialog, self).showEvent(event)
 

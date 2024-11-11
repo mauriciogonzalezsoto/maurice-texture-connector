@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: combo_box.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-10-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -22,7 +22,7 @@ from maurice_texture_connector.ui.maurice_qt.maurice_widgets_styles import Mauri
 class QComboBox(QtWidgets.QComboBox):
     """QComboBox."""
 
-    def __init__(self, fixed_size: bool = True):
+    def __init__(self) -> None:
         """Initializes class attributes."""
         super(QComboBox, self).__init__()
 
@@ -33,9 +33,6 @@ class QComboBox(QtWidgets.QComboBox):
         self.wheel_event = True
 
         # QComboBox settings.
-        if fixed_size:
-            self.setFixedWidth(maurice_widgets_style.WIDTH)
-
         self.setFixedHeight(maurice_widgets_style.HEIGHT)
         self.setStyleSheet(maurice_widgets_style.combo_box())
 
@@ -65,16 +62,17 @@ class QComboBox(QtWidgets.QComboBox):
         """Sets the wheel event."""
         self.wheel_event = wheel_event
 
-    def keyPressEvent(self, event):
+    def keyPressEvent(self, event: any) -> None:
         """Key press event."""
         pass
 
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event: any) -> None:
         """Mouse press event."""
         super(QComboBox, self).mousePressEvent(event)
+
         self.last_text = self.currentText()
 
-    def wheelEvent(self, event):
+    def wheelEvent(self, event: any) -> None:
         """Wheel event."""
         if self.wheel_event:
             super(QComboBox, self).wheelEvent(event)
@@ -83,7 +81,7 @@ class QComboBox(QtWidgets.QComboBox):
 class QSeparatorStyledItemDelegate(QtWidgets.QStyledItemDelegate):
     """QSeparatorStyledItemDelegate."""
 
-    def paint(self, painter, option, index):
+    def paint(self, painter: QtGui.QPainter, option: QtWidgets.QStyleOptionViewItem, index: QtCore.QModelIndex) -> None:
         """Paint."""
         if index.data(QtCore.Qt.UserRole) == 'mauriceSeparator':
             pen = QtGui.QPen(QtGui.QColor(255, 255, 255))

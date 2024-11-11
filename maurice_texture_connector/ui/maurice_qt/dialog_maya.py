@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: dialog_maya.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-05-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -35,7 +35,7 @@ def maya_main_window() -> QtWidgets.QWidget:
 
 class QDialogMaya(QDialog):
     """QDialog Maya."""
-    def __init__(self, parent: QtWidgets.QWidget = maya_main_window()):
+    def __init__(self, parent: QtWidgets.QWidget = maya_main_window()) -> None:
         super(QDialogMaya, self).__init__(parent)
 
         # Script jobs class variables.
@@ -66,14 +66,14 @@ class QDialogMaya(QDialog):
 
         self.script_jobs.clear()
 
-    def closeEvent(self, event):
+    def closeEvent(self, event: any) -> None:
         """Close event."""
         super(QDialogMaya, self).closeEvent(event)
 
         self.delete_call_backs()
         self.delete_script_jobs()
 
-    def showEvent(self, event):
+    def showEvent(self, event: any) -> None:
         """Show event."""
         super(QDialogMaya, self).showEvent(event)
 

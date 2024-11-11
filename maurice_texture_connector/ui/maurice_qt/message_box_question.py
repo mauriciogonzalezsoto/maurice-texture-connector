@@ -8,9 +8,11 @@ Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
 """
 try:
+    from PySide6 import QtWidgets
     from PySide6 import QtCore
     from PySide6 import QtGui
 except ImportError:
+    from PySide2 import QtWidgets
     from PySide2 import QtCore
     from PySide2 import QtGui
 
@@ -34,7 +36,7 @@ class QMessageBoxQuestion(QDialog):
     yes = QtCore.Signal()
     no = QtCore.Signal()
 
-    def __init__(self, question: str, title: str):
+    def __init__(self, parent: QtWidgets.QWidget, question: str, title: str) -> None:
         """Initializes class attributes."""
         # QInputDialog class variables.
         self.title = title if title else self.WINDOW_TITLE
@@ -46,7 +48,7 @@ class QMessageBoxQuestion(QDialog):
         self.yes_push_button = None
         self.no_push_button = None
 
-        super(QMessageBoxQuestion, self).__init__()
+        super(QMessageBoxQuestion, self).__init__(parent)
 
         # QDialog settings.
         self.setFixedWidth(self.WINDOW_WIDTH)

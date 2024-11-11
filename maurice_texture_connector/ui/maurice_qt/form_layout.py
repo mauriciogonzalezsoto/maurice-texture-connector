@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: form_layout.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-10-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -19,7 +19,7 @@ from maurice_texture_connector.ui.maurice_qt.label import QLabel
 class QFormLayout(QtWidgets.QFormLayout):
     """QFormLayout."""
 
-    def __init__(self, *args):
+    def __init__(self, *args) -> None:
         """Initializes class attributes."""
         super(QFormLayout, self).__init__(*args)
 
@@ -29,6 +29,6 @@ class QFormLayout(QtWidgets.QFormLayout):
         self.setContentsMargins(0, 0, 0, 0)
         self.setSpacing(maurice_widgets_style.SPACING)
 
-    def add_row(self, label_text: str, filed: any):
+    def add_row(self, label_text: str, filed: any) -> None:
         """Adds a row."""
         self.addRow(QLabel(label_text), filed)

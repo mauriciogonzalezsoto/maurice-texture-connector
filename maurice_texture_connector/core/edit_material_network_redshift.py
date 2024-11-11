@@ -2,7 +2,7 @@
 ========================================================================================================================
 Name: edit_material_network_redshift.py
 Author: Mauricio Gonzalez Soto
-Updated Date: 11-09-2024
+Updated Date: 11-11-2024
 
 Copyright (C) 2024 Mauricio Gonzalez Soto. All rights reserved.
 ========================================================================================================================
@@ -21,6 +21,6 @@ class EditMaterialNetworkRedshift(EditMaterialNetwork):
     OPACITY_MATERIAL_INPUT_NAME = 'opacity_color'
     ROUGHNESS_MATERIAL_INPUT_NAME = 'refl_roughness'
 
-    def __init__(self, material: str):
+    def __init__(self, material: str) -> None:
         """Initializes class attributes."""
         super(EditMaterialNetworkRedshift, self).__init__(material)

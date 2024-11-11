@@ -20,6 +20,7 @@ import maya.api.OpenMaya as om
 import maya.cmds as cmds
 
 from functools import partial
+import logging
 import os
 
 from maurice_texture_connector.core.create_material_network_redshift import CreateMaterialNetworkRedshift
@@ -32,6 +33,9 @@ from maurice_texture_connector.ui.texture_settings_widget import TextureSettings
 import maurice_texture_connector.ui.maurice_qt as maurice_qt
 import maurice_texture_connector.utils as maurice_utils
 import maurice_texture_connector as maurice
+
+
+logger = logging.getLogger(__name__)
 
 
 class TextureConnectorUI(maurice_qt.QDialogMaya):
@@ -59,7 +63,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
         super(TextureConnectorUI, cls).show_window()
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initializes class attributes."""
         self.maurice_widgets_style = maurice_qt.MauriceWidgetsStyle()
 
@@ -289,7 +293,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         # Settings.
         # ==============================================================================================================
         # Render engine QComboBox.
-        self.render_engine_combo_box = maurice_qt.QComboBox(fixed_size=False)
+        self.render_engine_combo_box = maurice_qt.QComboBox()
 
         # Base color QCheckBox.
         self.base_color_check_box = maurice_qt.QCheckBox('Base Color')
@@ -331,7 +335,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         # Texture connector.
         # ==============================================================================================================
         # Presets QComboBox.
-        self.presets_combo_box = maurice_qt.QComboBox(fixed_size=False)
+        self.presets_combo_box = maurice_qt.QComboBox()
         self.presets_combo_box.add_separator()
         self.presets_combo_box.set_wheel_event(False)
         self.presets_combo_box.addItems(['Add New Preset', 'Delete Current Preset'])
@@ -871,15 +875,15 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         # Settings.
         # ==============================================================================================================
         s.beginGroup('settings')
-        self.base_color_check_box.setChecked(s.value('baseColor', 'True', str).lower() == 'true')
-        self.roughness_check_box.setChecked(s.value('roughness', 'True', str).lower() == 'true')
-        self.metalness_check_box.setChecked(s.value('metalness', 'True', str).lower() == 'true')
-        self.normal_check_box.setChecked(s.value('normal', 'True', str).lower() == 'true')
-        self.height_check_box.setChecked(s.value('height', 'True', str).lower() == 'true')
-        self.emissive_check_box.setChecked(s.value('emissive', 'True', str).lower() == 'true')
-        self.opacity_check_box.setChecked(s.value('opacity', 'True', str).lower() == 'true')
-        self.use_triplanar_check_box.setChecked(s.value('useTriplanar', 'False', str).lower() == 'true')
-        self.use_texture_name_check_box.setChecked(s.value('useTextureName', 'True', str).lower() == 'true')
+        self.base_color_check_box.setChecked(str(s.value('baseColor', 'True', str)).lower() == 'true')
+        self.roughness_check_box.setChecked(str(s.value('roughness', 'True', str)).lower() == 'true')
+        self.metalness_check_box.setChecked(str(s.value('metalness', 'True', str)).lower() == 'true')
+        self.normal_check_box.setChecked(str(s.value('normal', 'True', str)).lower() == 'true')
+        self.height_check_box.setChecked(str(s.value('height', 'True', str)).lower() == 'true')
+        self.emissive_check_box.setChecked(str(s.value('emissive', 'True', str)).lower() == 'true')
+        self.opacity_check_box.setChecked(str(s.value('opacity', 'True', str)).lower() == 'true')
+        self.use_triplanar_check_box.setChecked(str(s.value('useTriplanar', 'False', str)).lower() == 'true')
+        self.use_texture_name_check_box.setChecked(str(s.value('useTextureName', 'True', str)).lower() == 'true')
         s.endGroup()
 
         # ==============================================================================================================
@@ -888,7 +892,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.block_all_signals()
 
         s.beginGroup('texture_connector')
-        self.presets_combo_box.insertItems(0, s.value('presets', 'Maurice', str).split(','))
+        self.presets_combo_box.insertItems(0, str(s.value('presets', 'Maurice', str)).split(','))
         self.presets_combo_box.setCurrentText(s.value('currentPreset', 'Maurice', str))
         s.endGroup()
 
@@ -927,9 +931,13 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         self.update_images_items()
         self.update_files_items()
 
+        logger.debug(args)
+
     def after_save_scene(self, *args) -> None:
         """After save scene."""
         self.set_maya_project_status_image()
+
+        logger.debug(args)
 
     def selection_changed(self) -> None:
         """Selection changed."""
@@ -1470,7 +1478,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         """Add a new preset."""
         protected_names = ['Add New Preset', 'Delete Current Preset']
 
-        input_dialog = maurice_qt.QInputDialog('New Preset Name')
+        input_dialog = maurice_qt.QInputDialog(parent=self, title='New Preset Name')
 
         if input_dialog.exec_():
             new_preset_name = input_dialog.get_text()
@@ -1495,6 +1503,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
         if self.presets_combo_box.currentText() != 'Maurice':
             if not maurice_qt.QMessageBoxQuestion(
+                    parent=self,
                     question='Do you want to delete the current preset?',
                     title='Delete current preset').exec_():
                 return
@@ -1526,7 +1535,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
         name = ''
 
         if not self.use_texture_name_check_box.isChecked():
-            input_dialog = maurice_qt.QInputDialog('Material Name')
+            input_dialog = maurice_qt.QInputDialog(parent=self, title='Material Name')
 
             if input_dialog.exec_():
                 name = input_dialog.get_text()
@@ -1576,6 +1585,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
         if 'lookdevKit' not in plugins_loaded and use_triplanar:
             if not maurice_qt.QMessageBoxQuestion(
+                    parent=self,
                     question='Do you want to load the lookdevKit.mll plugin?',
                     title='Load Plugin').exec_():
                 return
@@ -1819,6 +1829,8 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
         self.main_widget.setVisible(render_engine_loaded)
 
+        logger.debug(args)
+
     def set_window_title(self) -> None:
         """Sets the window title."""
         render_engine = self.render_engine_combo_box.currentText()
@@ -1851,7 +1863,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
                     root_paths[file_texture_dirname] = files
 
         for key in root_paths.keys():
-            top_level_item = QtWidgets.QTreeWidgetItem(None)
+            top_level_item = QtWidgets.QTreeWidgetItem()
             top_level_item.setData(0, QtCore.Qt.UserRole, key)
 
             if os.path.exists(key):
@@ -1873,7 +1885,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
                     if os.path.exists(file_texture_name):
                         if file_texture_name.startswith(current_maya_project):
-                            icon = QtGui.QIcon(self.icons['check-1.png'])
+                            icon = QtGui.QIcon(self.icons['check.png'])
                             file_status.append('check')
                         else:
                             icon = QtGui.QIcon(self.icons['warning.png'])
@@ -1892,7 +1904,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
             elif file_status_warning_count:
                 icon = QtGui.QIcon(self.icons['warning.png'])
             else:
-                icon = QtGui.QIcon(self.icons['check-1.png'])
+                icon = QtGui.QIcon(self.icons['check.png'])
 
             top_level_item_count = top_level_item.childCount()
 
@@ -1944,7 +1956,7 @@ class TextureConnectorUI(maurice_qt.QDialogMaya):
 
         self.file_system_watcher.addPath(source_images_path)
 
-    def showEvent(self, event):
+    def showEvent(self, event: any) -> None:
         """Show event."""
         super(TextureConnectorUI, self).showEvent(event)
 

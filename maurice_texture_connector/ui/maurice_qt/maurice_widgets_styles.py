@@ -15,13 +15,17 @@ class MauriceWidgetsStyle(object):
     SCALING_FACTOR = maurice_utils.get_value_by_ppi(2, 3)
 
     SOFTWARE_COLOR = '#5285A6'
+    WHITE_COLOR = '#FFFFFF'
+    WARNING_C0LOR = '#FFD600'
+    ERROR_COLOR = '#D50000'
+
     BORDER_RADIUS = SCALING_FACTOR * 2
     FONT_SIZE = maurice_utils.get_value_by_ppi(11, 15)
     SPACING = SCALING_FACTOR
     HEIGHT = SCALING_FACTOR * 10
     WIDTH = maurice_utils.get_value_by_ppi(100, 126)
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initializes class attributes."""
         self.icons = maurice_utils.get_icons()
 
@@ -29,7 +33,7 @@ class MauriceWidgetsStyle(object):
         """QCheckBox."""
         style = f'''
             QCheckBox {{
-                color: white; 
+                color: {MauriceWidgetsStyle.WHITE_COLOR}; 
                 font-size: {MauriceWidgetsStyle.FONT_SIZE};
             }}
             
@@ -71,7 +75,7 @@ class MauriceWidgetsStyle(object):
             QComboBox {{
                 background-color: rgb(45, 45, 45); 
                 border-radius: {MauriceWidgetsStyle.BORDER_RADIUS}px; 
-                color: white; 
+                color: {MauriceWidgetsStyle.WHITE_COLOR}; 
                 font-size: {MauriceWidgetsStyle.FONT_SIZE}px;
                 padding-left: {maurice_utils.get_value_by_ppi(4, 7)}px;
             }}
@@ -81,7 +85,7 @@ class MauriceWidgetsStyle(object):
             }}
     
             QComboBox QAbstractItemView {{
-                color: white; 
+                color: {MauriceWidgetsStyle.WHITE_COLOR}; 
                 selection-background-color: {MauriceWidgetsStyle.SOFTWARE_COLOR};
             }}
     
@@ -124,7 +128,7 @@ class MauriceWidgetsStyle(object):
             QDoubleSpinBox {{
                 background-color: rgb(45, 45, 45);
                 border-radius: {MauriceWidgetsStyle.BORDER_RADIUS}px; 
-                color: white;
+                color: {MauriceWidgetsStyle.WHITE_COLOR};
                 selection-background-color: {MauriceWidgetsStyle.SOFTWARE_COLOR}; 
                 font-size: {MauriceWidgetsStyle.FONT_SIZE}px;
             }}
@@ -154,7 +158,7 @@ class MauriceWidgetsStyle(object):
         """QLabel."""
         style = f'''
         QLabel {{
-            color: white; 
+            color: {MauriceWidgetsStyle.WHITE_COLOR}; 
             font-size: {MauriceWidgetsStyle.FONT_SIZE}px;
         }}
                        
@@ -172,7 +176,7 @@ class MauriceWidgetsStyle(object):
             QLineEdit {{
                 background-color: rgb(45, 45, 45); 
                 border-radius: {MauriceWidgetsStyle.BORDER_RADIUS}px; 
-                color: white;
+                color: {MauriceWidgetsStyle.WHITE_COLOR};
                 selection-background-color: {MauriceWidgetsStyle.SOFTWARE_COLOR}; 
                 font-size: {MauriceWidgetsStyle.FONT_SIZE}px; 
                 padding-left: 4px;
@@ -195,7 +199,7 @@ class MauriceWidgetsStyle(object):
             }}
             
             QListWidget::item {{
-                color: white; 
+                color: {MauriceWidgetsStyle.WHITE_COLOR}; 
             }}
             
             QListWidget::item:selected {{
@@ -246,7 +250,7 @@ class MauriceWidgetsStyle(object):
                 border-radius: 5px; 
                 padding: 3px 50px 3px 15px;
                 background-color: rgb(45, 45, 45);
-                color: white;
+                color: {MauriceWidgetsStyle.WHITE_COLOR};
                 font-size: {MauriceWidgetsStyle.FONT_SIZE}px;
                 margin: 1px 0px 1px 0px;
                 min-width: {MauriceWidgetsStyle.SCALING_FACTOR * 40}px;
@@ -272,7 +276,7 @@ class MauriceWidgetsStyle(object):
             
             QMenu::separator {{
                 height: 1px;
-                background-color: white;
+                background-color: {MauriceWidgetsStyle.WHITE_COLOR};
                 margin: 1px 0px 1px 0px;
                 margin-left: auto;
             }}
@@ -287,7 +291,7 @@ class MauriceWidgetsStyle(object):
             QPushButton {{
                 background-color: rgb(45, 45, 45); 
                 border-radius: {MauriceWidgetsStyle.BORDER_RADIUS}px; 
-                color: white; 
+                color: {MauriceWidgetsStyle.WHITE_COLOR}; 
                 font-size: {MauriceWidgetsStyle.FONT_SIZE}px;
             }}
             
@@ -306,7 +310,7 @@ class MauriceWidgetsStyle(object):
             
             QToolTip {{
                 background-color: rgb(45, 45, 45);
-                color: white; 
+                color: {MauriceWidgetsStyle.WHITE_COLOR}; 
                 border: 1px solid {MauriceWidgetsStyle.SOFTWARE_COLOR}; 
             }}
             '''
@@ -317,7 +321,7 @@ class MauriceWidgetsStyle(object):
         """QRadioButton."""
         style = f'''
             QRadioButton {{
-                color: white; 
+                color: {MauriceWidgetsStyle.WHITE_COLOR}; 
                 font-size: {MauriceWidgetsStyle.FONT_SIZE}px;
             }}
                     
@@ -403,7 +407,7 @@ class MauriceWidgetsStyle(object):
             QSpinBox {{
                 background-color: rgb(45, 45, 45);
                 border-radius: {MauriceWidgetsStyle.BORDER_RADIUS}px;
-                color: white;
+                color: {MauriceWidgetsStyle.WHITE_COLOR};
                 selection-background-color: {MauriceWidgetsStyle.SOFTWARE_COLOR}; 
                 font-size: {MauriceWidgetsStyle.FONT_SIZE}px;
             }}
@@ -452,12 +456,12 @@ class MauriceWidgetsStyle(object):
             
             QTabBar::tab:selected {{
                 background-color: rgb(45, 45, 45);
-                color: white;
+                color: {MauriceWidgetsStyle.WHITE_COLOR};
             }}
             
             QTabBar::tab:!selected {{
                 background-color: rgb(70, 70, 70);
-                color: white;
+                color: {MauriceWidgetsStyle.WHITE_COLOR};
             }}
             
             QTabBar::tab:first {{
@@ -502,7 +506,7 @@ class MauriceWidgetsStyle(object):
             
             QToolTip {{
                 background-color: rgb(45, 45, 45);
-                color: white; 
+                color: {MauriceWidgetsStyle.WHITE_COLOR}; 
                 border: 1px solid {MauriceWidgetsStyle.SOFTWARE_COLOR}; 
             }}
             
